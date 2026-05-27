@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Squad Management - TEAMUP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Sora:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#2d3449",
+                      "outline-variant": "#4a4455",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "error-container": "#93000a",
+                      "surface-bright": "#31394d",
+                      "primary-container": "#7c3aed",
+                      "error": "#ffb4ab",
+                      "secondary": "#b4c5ff",
+                      "on-surface": "#dae2fd",
+                      "surface-variant": "#2d3449",
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#00174b",
+                      "on-tertiary": "#003915",
+                      "surface": "#0b1326",
+                      "on-tertiary-fixed": "#002109",
+                      "surface-container-low": "#131b2e",
+                      "on-primary-container": "#ede0ff",
+                      "secondary-container": "#0053db",
+                      "on-tertiary-container": "#84ff9c",
+                      "inverse-primary": "#732ee4",
+                      "outline": "#958da1",
+                      "inverse-on-surface": "#283044",
+                      "on-background": "#dae2fd",
+                      "surface-container-high": "#222a3d",
+                      "on-surface-variant": "#ccc3d8",
+                      "on-primary": "#3f008e",
+                      "on-secondary-container": "#cdd7ff",
+                      "on-primary-fixed-variant": "#5a00c6",
+                      "surface-container-lowest": "#060e20",
+                      "surface-container": "#171f33",
+                      "inverse-surface": "#dae2fd",
+                      "on-tertiary-fixed-variant": "#005321",
+                      "tertiary": "#4ae176",
+                      "background": "#0b1326",
+                      "on-primary-fixed": "#25005a",
+                      "tertiary-fixed": "#6bff8f",
+                      "tertiary-container": "#007733",
+                      "on-secondary": "#002a78",
+                      "secondary-fixed": "#dbe1ff",
+                      "primary-fixed-dim": "#d2bbff",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "surface-tint": "#d2bbff",
+                      "surface-dim": "#0b1326",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed": "#eaddff",
+                      "primary": "#d2bbff",
+                      "tertiary-fixed-dim": "#4ae176"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "xl": "80px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "md": "24px",
+                      "sm": "12px",
+                      "margin-mobile": "16px",
+                      "lg": "48px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Sora"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Sora"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Sora"
+                      ],
+                      "stats-number": [
+                              "Sora"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "stats-number": [
+                              "20px",
+                              {
+                                      "lineHeight": "1",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .neon-border-gradient {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+        .text-glow {
+            text-shadow: 0 0 10px rgba(210, 187, 255, 0.5);
+        }
+        .box-glow {
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
+        .box-glow-intense {
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.6);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-safe">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-white/10 bg-surface/40 shadow-[0_4px_30px_rgba(0,0,0,0.1)] bg-surface/80 backdrop-blur-xl dark:bg-surface/80 flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop md:hidden">
+<div class="flex items-center gap-sm">
+<img alt="Player Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A close-up portrait of a serious eSports player wearing a black gaming headset in a dark room. The lighting is dominated by vivid purple and electric blue neon hues, reflecting the high-stakes, adrenaline-fueled aesthetic. The player looks focused and intense, embodying a hyper-professional yet immersive digital mastery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaJzrLvLbjSiUJPT9YJghsBJGW0eVxSDz25tzKd2LRK1C9W1nsieKfOf_GOWbMwt3Ypi1FUFo4a1fvENAp9MT25gyHZYNOI_irSd8kwuA8TD8EXL4EK2G8mXJm1cIOYb7dlTya6yNvG1iVXF0HXjcTOo1ZdaNOaxUmqaYSaJtshLT6mU37fbm_lWv59u6enHAplfYy8aUD3tHh6MpRwU0VlW6GbYhBgM-_BPAzwmLqdOlxkL9pJcb6u2VrrFLhp3fLCy2Ban6v4uA"/>
+</div>
+<div class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter">
+            TEAMUP
+        </div>
+<div class="flex items-center gap-sm text-primary dark:text-primary hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Navigation (Desktop) -->
+<nav class="hidden md:flex fixed top-0 w-full z-50 border-b border-white/10 bg-surface/80 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] h-16 px-margin-desktop justify-between items-center">
+<div class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter">
+            TEAMUP
+        </div>
+<div class="flex gap-md font-label-caps text-label-caps">
+<a class="text-on-surface-variant hover:text-primary/80 flex items-center gap-xs" href="#"><span class="material-symbols-outlined text-[16px]">home</span> Home</a>
+<a class="text-on-surface-variant hover:text-primary/80 flex items-center gap-xs" href="#"><span class="material-symbols-outlined text-[16px]">sports_esports</span> Match</a>
+<a class="text-primary flex items-center gap-xs drop-shadow-[0_0_8px_rgba(210,187,255,0.8)]" href="#"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">groups</span> Squad</a>
+<a class="text-on-surface-variant hover:text-primary/80 flex items-center gap-xs" href="#"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> Chat</a>
+<a class="text-on-surface-variant hover:text-primary/80 flex items-center gap-xs" href="#"><span class="material-symbols-outlined text-[16px]">person</span> Profile</a>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary hover:text-primary/80 cursor-pointer">notifications</span>
+<img alt="Player Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A close-up portrait of a serious eSports player wearing a black gaming headset in a dark room. The lighting is dominated by vivid purple and electric blue neon hues, reflecting the high-stakes, adrenaline-fueled aesthetic. The player looks focused and intense, embodying a hyper-professional yet immersive digital mastery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPHp3sH4x2MTwpKWpHDf7aCgy9fpDLDWbvwXweNKmRSo5y7oHUiygw9z4eJ-IsXfahciooetdpUgQex5IvILyz2ff6fNmrv9BmNi7Ni1pKkxzeIJoJqBhOkbUgGRiaXv4NAbf0dS_t0x6Xn6voB5knXHJSTODR5LbmRJEdc8em-TIfKtjtp5CMVn4iVgiNOZ8LeOEhrEPE2Y5vWqthxWExyFTGAnUSO47R-FsO6Zh77fEpm0pVx-y7YirCy2N1RW3vduxcMj9nO0I"/>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-24 md:pt-32 pb-32 px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-xs">Echo Squadron</h1>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">fiber_manual_record</span> Online: 4/5
+                </p>
+</div>
+<!-- Room Info & Sharing -->
+<div class="flex flex-col gap-sm w-full md:w-auto">
+<div class="bg-surface-container/60 backdrop-blur-md rounded-lg border border-outline-variant/30 p-sm flex items-center justify-between gap-md neon-border-gradient">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">meeting_room</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ROOM ID</p>
+<p class="font-stats-number text-stats-number text-on-surface">VAL-992-X</p>
+</div>
+</div>
+<button class="bg-surface-container-high hover:bg-surface-bright text-on-surface p-sm rounded-lg border border-outline-variant/50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-md md:gap-lg">
+<!-- Roster List -->
+<div class="lg:col-span-8 flex flex-col gap-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm flex items-center gap-xs">
+<span class="material-symbols-outlined">group</span> Roster
+                </h2>
+<!-- Player 1 (Leader) -->
+<div class="bg-surface-container/40 backdrop-blur-2xl rounded-xl border border-outline-variant/50 p-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md neon-border-gradient box-glow transition-all hover:bg-surface-container/60">
+<div class="flex items-center gap-md">
+<div class="relative">
+<img alt="Player Avatar" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="A macro shot of high-end mechanical keyboard keys illuminated by deep purple and bright blue RGB lighting. The lighting suggests a premium gaming setup in a dark environment, reflecting the dark minimalism and technical glassmorphism style of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnpqKMYbqcR8fTz6syYNAtZYnztcVbMVDLVwmkLTy94BmQR0YAAZ3shylH70v_8VN82onkxWS5UNH8gzwtLXWh9v4x_bW3RQJbajQa8uho2kCcS1dt1V3xao6WypBvdqeF363nPxH5xp4asy7YWk8VZLlF69SEh9z7lbKIF3DTLl1MYJU4xUm3uXLcTg7z92aFcPbAtjlsdUb9RpFoW6qRYZB2rhyRLYA_mH8jE0ez8Pc2yLN_GnQv5srMN2Z5lg6OZH3njvpVDtQ"/>
+<div class="absolute -bottom-1 -right-1 bg-tertiary w-3 h-3 rounded-full border-2 border-surface-container"></div>
+</div>
+<div>
+<div class="flex items-center gap-sm mb-1">
+<h3 class="font-body-lg text-body-lg text-on-surface font-bold">Xenon</h3>
+<span class="bg-primary/20 text-primary border border-primary/30 px-2 py-1 rounded DEFAULT font-label-caps text-[10px]">LEADER</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">my_location</span> Entry Fragger
+                            </p>
+</div>
+</div>
+<div class="flex items-center gap-md w-full sm:w-auto justify-between sm:justify-end">
+<div class="flex items-center gap-xs text-tertiary bg-tertiary/10 px-3 py-1.5 rounded-full border border-tertiary/20">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-caps text-label-caps">READY</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Player 2 -->
+<div class="bg-surface-container/20 backdrop-blur-2xl rounded-xl border border-outline-variant/30 p-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md neon-border-gradient transition-all hover:bg-surface-container/40">
+<div class="flex items-center gap-md">
+<div class="relative">
+<img alt="Player Avatar" class="w-12 h-12 rounded-full border-2 border-outline-variant" data-alt="A stylized, glowing abstract geometric shape resembling a futuristic crest or emblem, floating against a dark, ink-like void background. The shape features subtle inner-glow strokes in neon blue, fitting perfectly within a dark minimalism gaming interface design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1rkKudIdEsdn-gT14P7W8U4nLi--9OzvOBTZ2_soF5jlSpwLHf6-nFbFoMNDxrZlgVCZQ2pgnZtzbXip2eFRygxHaIA2MRDV8kecnk_XiC5AatSYJ5mi8WkWEr4HiYwvLCA2hkR6LwY9n_VDUWUEQamgZW25SYCwD-wB0EvuSYVOrzQdzQKwLkq9m8DCRvErdexELuGHYURh6MIxdf8v38BiCsfFfc1zZB58jc8RQToKcA_m7fX17V7pD3090nPCNOgiP55s-WB8"/>
+<div class="absolute -bottom-1 -right-1 bg-tertiary w-3 h-3 rounded-full border-2 border-surface-container"></div>
+</div>
+<div>
+<div class="flex items-center gap-sm mb-1">
+<h3 class="font-body-lg text-body-lg text-on-surface font-bold">Valkyrie</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">healing</span> Support
+                            </p>
+</div>
+</div>
+<div class="flex items-center gap-md w-full sm:w-auto justify-between sm:justify-end">
+<div class="flex items-center gap-xs text-on-surface-variant bg-surface-bright px-3 py-1.5 rounded-full border border-outline-variant/50">
+<span class="material-symbols-outlined text-[16px]">hourglass_empty</span>
+<span class="font-label-caps text-label-caps">PENDING</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Panel -->
+<div class="lg:col-span-4 flex flex-col gap-md">
+<!-- Launch Button Card -->
+<div class="bg-surface-container/60 backdrop-blur-3xl rounded-xl border border-primary/30 p-md flex flex-col gap-md box-glow-intense neon-border-gradient relative overflow-hidden">
+<!-- Subtle background element -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 blur-3xl rounded-full pointer-events-none"></div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Ready for Action?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Ensure all members are ready before initiating the sequence.</p>
+</div>
+<button class="w-full bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-body-lg font-bold py-4 rounded-lg flex items-center justify-center gap-sm hover:from-primary hover:to-secondary transition-all duration-300 shadow-[0_0_20px_rgba(124,58,237,0.5)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+                        LAUNCH SESSION
+                    </button>
+</div>
+<!-- Squad Stats Bento -->
+<div class="grid grid-cols-2 gap-sm">
+<div class="bg-surface-container/40 backdrop-blur-xl border border-outline-variant/30 rounded-xl p-sm neon-border-gradient">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">WIN STREAK</p>
+<div class="flex items-end gap-xs">
+<span class="font-stats-number text-[32px] font-bold text-tertiary">4</span>
+<span class="font-body-md text-body-md text-on-surface-variant pb-1">Matches</span>
+</div>
+</div>
+<div class="bg-surface-container/40 backdrop-blur-xl border border-outline-variant/30 rounded-xl p-sm neon-border-gradient">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">AVG RATING</p>
+<div class="flex items-end gap-xs">
+<span class="font-stats-number text-[32px] font-bold text-primary">S</span>
+<span class="font-body-md text-body-md text-on-surface-variant pb-1">Tier</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl border-t border-white/10 bg-surface-container-highest/30 bg-surface/90 backdrop-blur-2xl dark:bg-surface/90 shadow-[0_-8px_32px_rgba(124,58,237,0.15)] flex justify-around items-center h-20 pb-safe px-xs">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-label-caps text-label-caps mt-1">Match</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary drop-shadow-[0_0_8px_rgba(210,187,255,0.8)] scale-110 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-caps text-label-caps mt-1">Squad</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-caps text-label-caps mt-1">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TeamUp - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Sora:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#4a4455",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#7c3aed",
+                        "error": "#ffb4ab",
+                        "secondary": "#b4c5ff",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary": "#003915",
+                        "surface": "#0b1326",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-low": "#131b2e",
+                        "on-primary-container": "#ede0ff",
+                        "secondary-container": "#0053db",
+                        "on-tertiary-container": "#84ff9c",
+                        "inverse-primary": "#732ee4",
+                        "outline": "#958da1",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-primary": "#3f008e",
+                        "on-secondary-container": "#cdd7ff",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container": "#171f33",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "tertiary": "#4ae176",
+                        "background": "#0b1326",
+                        "on-primary-fixed": "#25005a",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-container": "#007733",
+                        "on-secondary": "#002a78",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-tint": "#d2bbff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#eaddff",
+                        "primary": "#d2bbff",
+                        "tertiary-fixed-dim": "#4ae176"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "margin-mobile": "16px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Sora"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Sora"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Sora"],
+                        "stats-number": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "stats-number": ["20px", { "lineHeight": "1", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col overflow-hidden font-body-md text-body-md antialiased">
+<!-- Top Action Area (Skip) -->
+<header class="w-full flex justify-end p-margin-mobile md:p-margin-desktop absolute top-0 left-0 z-50">
+<button class="font-label-caps text-label-caps text-outline hover:text-primary transition-colors duration-300 px-sm py-sm">
+            SKIP
+        </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col relative w-full h-full max-w-7xl mx-auto">
+<!-- Hero Illustration Container -->
+<div class="flex-1 flex items-center justify-center relative px-margin-mobile md:px-margin-desktop pt-xl pb-gutter">
+<!-- Background Glow Effect behind image -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+<div class="w-64 h-64 md:w-[500px] md:h-[500px] bg-primary rounded-full blur-[100px]"></div>
+</div>
+<!-- Futuristic Illustration Placeholder -->
+<div class="relative w-full max-w-lg aspect-square rounded-full border border-white/5 bg-surface/40 backdrop-blur-sm flex items-center justify-center overflow-hidden shadow-[inset_0_0_100px_rgba(124,58,237,0.1)]">
+<img class="w-full h-full object-cover mix-blend-screen opacity-80" data-alt="A high-fidelity, futuristic 3D illustration representing an intelligent matchmaking algorithm for a competitive eSports platform. The scene features abstract, glowing holographic geometric networks and data streams connecting in a vast digital void. The aesthetic relies heavily on dark minimalism, using deep, ink-like blacks as the backdrop. The holographic elements glow intensely with vibrant neon purples and electric blues to signify a high-performance, immersive gaming environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG08Xx-0StBw3-0zG7hCG5tgbh1kJCCDv-3FGxNVK2WVOrWxWLmm_foKKMw8ei81V4j03bZ3mp9LtBUUghH9hP8Dj9-d0swAOtGS-znVEgFefDfK5nFbHh6PBDT644cQJOQqdqXidh-PH9RPnoE_GC18CdVWXg5gqRVAboybv1XgX4aFYOfUz3Aw4obHjOG9fc7rAbsigAlNcu8rB39k56tVPIzJo5zY3fqMNx76scyxlSBniYzpEMnlJY8ZDf8Dx_Zbk8l6_tjts"/>
+<!-- Floating Glass Overlay to enhance the tech feel -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+</div>
+<!-- Glassmorphism Content Panel -->
+<div class="w-full bg-surface/80 backdrop-blur-xl border-t border-white/10 rounded-t-[2rem] p-margin-mobile md:p-margin-desktop flex flex-col gap-md relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<!-- Text Content -->
+<div class="flex flex-col items-center text-center gap-sm">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface">
+                    Precision <span class="text-primary">Matchmaking</span>
+</h1>
+<p class="font-body-md text-body-md md:font-body-lg md:text-body-lg text-on-surface-variant max-w-md">
+                    Find teammates that match your skill level and playstyle.
+                </p>
+</div>
+<!-- Navigation Controls (Dots & Button) -->
+<div class="flex items-center justify-between mt-md pt-md w-full">
+<!-- Progress Indicators -->
+<div class="flex items-center gap-xs">
+<div class="w-lg h-xs bg-primary rounded-full shadow-[0_0_8px_var(--tw-colors-primary)]"></div>
+<div class="w-xs h-xs bg-surface-container-highest rounded-full transition-all duration-300"></div>
+<div class="w-xs h-xs bg-surface-container-highest rounded-full transition-all duration-300"></div>
+</div>
+<!-- Next Action Button -->
+<button class="flex items-center gap-sm bg-gradient-to-r from-primary-container to-secondary-container text-on-primary-container font-label-caps text-label-caps px-md py-sm rounded-lg shadow-[0_4px_20px_rgba(124,58,237,0.3)] hover:shadow-[0_4px_30px_rgba(124,58,237,0.6)] transition-all duration-300 group">
+<span>NEXT</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>
