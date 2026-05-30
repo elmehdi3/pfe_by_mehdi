@@ -2,9 +2,22 @@ import 'package:flutter/material.dart';
 import '../widgets/app_button.dart';
 import '../theme/app_colors.dart';
 import 'onboarding_flow.dart';
+import '../services/auth_service.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _authService = AuthService();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,23 +67,27 @@ class SignUpScreen extends StatelessWidget {
                   _buildTextField(
                     label: 'FULL NAME',
                     icon: Icons.person_outline,
+                    controller: _nameController,
                   ),
                   const SizedBox(height: 20),
                   _buildTextField(
                     label: 'EMAIL ADDRESS',
                     icon: Icons.email_outlined,
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 20),
                   _buildTextField(
                     label: 'PASSWORD',
                     icon: Icons.lock_outline,
                     isPassword: true,
+                    controller: _passwordController,
                   ),
                   const SizedBox(height: 20),
                   _buildTextField(
                     label: 'CONFIRM PASSWORD',
                     icon: Icons.lock_reset,
                     isPassword: true,
+                    controller: _confirmPasswordController,
                   ),
 
                   const SizedBox(height: 32),
@@ -95,17 +112,61 @@ class SignUpScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 32),
-                  AppButton(
-                    label: 'CREATE ACCOUNT',
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OnboardingFlow(),
+                  if (_isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    )
+                  else
+                    AppButton(
+                      label: 'CREATE ACCOUNT',
+                      onPressed: _handleSignUp,
+                      icon: Icons.person_add,
+                    ),
+
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Divider(color: AppColors.outlineVariant),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR CONTINUE WITH',
+                          style: TextStyle(
+                            color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                            fontSize: 10,
+                            letterSpacing: 1,
+                          ),
                         ),
-                      );
-                    },
-                    icon: Icons.person_add,
+                      ),
+                      const Expanded(
+                        child: Divider(color: AppColors.outlineVariant),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildSocialButton(
+                          Icons.g_mobiledata,
+                          'Google',
+                          onTap: _handleGoogleSignIn,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildSocialButton(
+                          Icons.discord,
+                          'Discord',
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 32),
@@ -138,10 +199,67 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _handleSignUp() async {
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _nameController.text.isEmpty)
+      return;
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showError('Passwords do not match.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    final result = await _authService.signUp(
+      _emailController.text,
+      _passwordController.text,
+      _nameController.text,
+    );
+    setState(() => _isLoading = false);
+
+    if (result != null) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OnboardingFlow()),
+        );
+      }
+    } else {
+      _showError('Registration Failed.');
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+    final result = await _authService.signInWithGoogle();
+    setState(() => _isLoading = false);
+
+    if (result != null) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OnboardingFlow()),
+        );
+      }
+    } else {
+      _showError('Google Sign-In was cancelled or failed.');
+    }
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
   Widget _buildTextField({
     required String label,
     required IconData icon,
     bool isPassword = false,
+    TextEditingController? controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,6 +283,7 @@ class SignUpScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            controller: controller,
             obscureText: isPassword,
             style: const TextStyle(color: AppColors.onSurface),
             decoration: InputDecoration(
@@ -175,6 +294,27 @@ class SignUpScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  Widget _buildSocialButton(IconData icon, String label, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerHighest.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.outlineVariant.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: AppColors.onSurface),
+            const SizedBox(width: 8),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
     );
   }
 }

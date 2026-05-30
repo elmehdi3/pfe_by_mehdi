@@ -5,6 +5,10 @@ import 'matchmaking_search_screen.dart';
 import 'player_profile_screen.dart';
 import 'real_time_chat_screen.dart';
 import 'squad_management_screen.dart';
+import 'leaderboard_screen.dart';
+import 'invitations_management_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/friend_provider.dart';
 
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
@@ -20,7 +24,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     const HomeDashboardScreen(),
     const MatchmakingSearchScreen(),
     const SquadManagementScreen(),
-    const RealTimeChatScreen(),
+    const RealTimeChatScreen(squadId: 'default'),
+    const LeaderboardScreen(),
     const PlayerProfileScreen(),
   ];
 
@@ -53,6 +58,25 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           ],
         ),
         actions: [
+          // Friend requests badge
+          Consumer<FriendProvider>(
+            builder: (context, fp, _) => IconButton(
+              icon: Badge(
+                isLabelVisible: fp.pendingCount > 0,
+                label: Text('${fp.pendingCount}'),
+                child: const Icon(
+                  Icons.group_outlined,
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const InvitationsManagementScreen(),
+                ),
+              ),
+            ),
+          ),
           IconButton(
             icon: const Icon(
               Icons.notifications_outlined,
@@ -95,6 +119,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble),
               label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.leaderboard),
+              label: 'Ranks',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],

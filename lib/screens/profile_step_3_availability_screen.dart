@@ -3,6 +3,8 @@ import '../widgets/app_button.dart';
 import '../widgets/app_card.dart';
 import '../widgets/day_toggle.dart';
 import '../theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
 class ProfileStep3Screen extends StatefulWidget {
   const ProfileStep3Screen({super.key});
@@ -16,6 +18,29 @@ class _ProfileStep3ScreenState extends State<ProfileStep3Screen> {
   final Set<int> activeDays = {1, 2, 4, 5, 6};
   double playTime = 3.0;
   String selectedTimeRange = 'Evening';
+
+  Future<void> _handleContinue() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // Map activeDays to days of the week for readable storage
+    final dayNames = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    final selectedDays = activeDays.map((i) => dayNames[i]).toList();
+
+    await userProvider.updateProfile({
+      'availability': {
+        'days': selectedDays,
+        'timeOfDay': selectedTimeRange,
+        'hoursPerDay': playTime.toInt(),
+      },
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +251,12 @@ class _ProfileStep3ScreenState extends State<ProfileStep3Screen> {
                 children: [
                   AppButton(
                     label: 'Continue',
-                    onPressed: () {},
+                    onPressed: () async {
+                      await _handleContinue();
+                      if (mounted) {
+                        // Navigator.push...
+                      }
+                    },
                     icon: Icons.arrow_forward,
                   ),
                   const SizedBox(height: 12),

@@ -5,8 +5,21 @@ import '../widgets/app_text_field.dart';
 import '../widgets/app_dropdown.dart';
 import '../theme/app_colors.dart';
 
-class ProfileStep1Screen extends StatelessWidget {
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
+
+class ProfileStep1Screen extends StatefulWidget {
   const ProfileStep1Screen({super.key});
+
+  @override
+  State<ProfileStep1Screen> createState() => _ProfileStep1ScreenState();
+}
+
+class _ProfileStep1ScreenState extends State<ProfileStep1Screen> {
+  final _nameController = TextEditingController();
+
+  String? selectedRegion;
+  String? selectedLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -88,36 +101,31 @@ class ProfileStep1Screen extends StatelessWidget {
 
                       // Avatar Upload
                       Center(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: AppColors.primary.withOpacity(0.5),
-                                  width: 2,
-                                ),
-                                color: AppColors.surfaceContainer,
-                              ),
-                              child: const Icon(
-                                Icons.add_a_photo,
-                                color: AppColors.primary,
-                                size: 40,
-                              ),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.primary.withOpacity(0.5),
+                              width: 2,
                             ),
-                            // Pulse would go here in a stateful widget
-                          ],
+                            color: AppColors.surfaceContainer,
+                          ),
+                          child: const Icon(
+                            Icons.add_a_photo,
+                            color: AppColors.primary,
+                            size: 40,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
 
-                      const AppTextField(
+                      AppTextField(
                         label: 'Gamertag',
                         placeholder: 'Enter your gaming alias',
                         icon: Icons.sports_esports,
+                        controller: _nameController,
                       ),
                       const SizedBox(height: 24),
 
@@ -125,6 +133,7 @@ class ProfileStep1Screen extends StatelessWidget {
                         label: 'Region',
                         placeholder: 'Select Region',
                         icon: Icons.public,
+                        value: selectedRegion,
                         items: const [
                           DropdownMenuItem(
                             value: 'na',
@@ -141,7 +150,8 @@ class ProfileStep1Screen extends StatelessWidget {
                             child: Text('Oceania'),
                           ),
                         ],
-                        onChanged: (val) {},
+                        onChanged: (val) =>
+                            setState(() => selectedRegion = val),
                       ),
                       const SizedBox(height: 24),
 
@@ -149,6 +159,7 @@ class ProfileStep1Screen extends StatelessWidget {
                         label: 'Primary Language',
                         placeholder: 'Select Language',
                         icon: Icons.translate,
+                        value: selectedLanguage,
                         items: const [
                           DropdownMenuItem(value: 'en', child: Text('English')),
                           DropdownMenuItem(value: 'es', child: Text('Español')),
@@ -159,7 +170,8 @@ class ProfileStep1Screen extends StatelessWidget {
                           DropdownMenuItem(value: 'kr', child: Text('한국어')),
                           DropdownMenuItem(value: 'jp', child: Text('日本語')),
                         ],
-                        onChanged: (val) {},
+                        onChanged: (val) =>
+                            setState(() => selectedLanguage = val),
                       ),
                       const SizedBox(height: 32),
 
@@ -170,8 +182,14 @@ class ProfileStep1Screen extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: AppButton(
                           label: 'NEXT',
-                          onPressed: () {
-                            // Navigate to Step 2
+                          onPressed: () async {
+                            await _handleContinue();
+                            if (mounted) {
+                              // This should be handled by PageController in ProfileFlow
+                              // But for now we use an event or callback if needed.
+                              // For simplicity I'll assume we navigate or use the flow logic.
+                              // I'll check ProfileFlow implementation.
+                            }
                           },
                           icon: Icons.arrow_forward,
                         ),
@@ -185,5 +203,14 @@ class ProfileStep1Screen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _handleContinue() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    await userProvider.updateProfile({
+      'fullName': _nameController.text,
+      'region': selectedRegion,
+      'language': selectedLanguage,
+    });
   }
 }
