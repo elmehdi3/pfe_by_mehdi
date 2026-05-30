@@ -4,6 +4,7 @@ import '../widgets/app_card.dart';
 import '../theme/app_colors.dart';
 import '../services/database_service.dart';
 import '../services/auth_service.dart';
+import '../models/user_model.dart';
 import 'package:provider/provider.dart';
 import '../providers/squad_provider.dart';
 import '../providers/user_provider.dart';
@@ -129,7 +130,7 @@ class _SquadManagementScreenState extends State<SquadManagementScreen> {
         const SizedBox(height: 16),
         ...members
             .map(
-              (memberId) => FutureBuilder<Map<String, dynamic>?>(
+              (memberId) => FutureBuilder<UserModel?>(
                 future: _dbService.getUserProfile(memberId),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return const SizedBox.shrink();
@@ -137,9 +138,13 @@ class _SquadManagementScreenState extends State<SquadManagementScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: _PlayerRosterItem(
-                      name: profile['fullName'] ?? 'Unknown',
-                      role: profile['gameRank'] ?? 'Player',
-                      imageUrl: 'https://via.placeholder.com/150',
+                      name: profile.fullName.isNotEmpty
+                          ? profile.fullName
+                          : 'Unknown',
+                      role: profile.gameRank ?? 'Player',
+                      imageUrl:
+                          profile.profileImage ??
+                          'https://via.placeholder.com/150',
                       isReady: true,
                     ),
                   );

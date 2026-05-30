@@ -249,9 +249,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _showError(String message) {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -295,7 +295,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ],
     );
-  Widget _buildSocialButton(IconData icon, String label, {VoidCallback? onTap}) {
+  }
+
+  Widget _buildSocialButton(
+    IconData icon,
+    String label, {
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),

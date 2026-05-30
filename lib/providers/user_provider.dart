@@ -20,6 +20,7 @@ class UserProvider with ChangeNotifier {
   void _listenToAuthChanges() {
     _authService.user.listen((firebaseUser) async {
       if (firebaseUser != null) {
+
         await fetchUserProfile(firebaseUser.uid);
       } else {
         _user = null;
