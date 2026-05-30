@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color background = Color(0xFF0B1326);
-  static const Color surface = Color(0xFF0B1326);
-  static const Color surfaceContainerLowest = Color(0xFF060E20);
-  static const Color surfaceContainerLow = Color(0xFF131B2E);
-  static const Color surfaceContainer = Color(0xFF171F33);
-  static const Color surfaceContainerHigh = Color(0xFF222A3D);
-  static const Color surfaceContainerHighest = Color(0xFF2D3449);
+  static const Color background = Color(0xFF161922);
+  static const Color surface = Color(0xFF161922);
+  static const Color surfaceContainerLowest = Color(0xFF10121A);
+  static const Color surfaceContainerLow = Color(0xFF1C202B);
+  static const Color surfaceContainer = Color(0xFF222731);
+  static const Color surfaceContainerHigh = Color(0xFF2B303B);
+  static const Color surfaceContainerHighest = Color(0xFF333A47);
 
-  static const Color primary = Color(0xFFD2BBFF);
-  static const Color onPrimary = Color(0xFF3F008E);
-  static const Color primaryContainer = Color(0xFF7C3AED);
-  static const Color onPrimaryContainer = Color(0xFFEDE0FF);
+  static const Color primary = Color(0xFF00FF87);
+  static const Color onPrimary = Color(0xFF00331A);
+  static const Color primaryContainer = Color(0xFF004D27);
+  static const Color onPrimaryContainer = Color(0xFF8FFFCA);
 
-  static const Color secondary = Color(0xFFB4C5FF);
-  static const Color onSecondary = Color(0xFF002A78);
-  static const Color secondaryContainer = Color(0xFF0053DB);
-  static const Color onSecondaryContainer = Color(0xFFCDD7FF);
+  static const Color secondary = Color(0xFF0AD1C8);
+  static const Color onSecondary = Color(0xFF002E2C);
+  static const Color secondaryContainer = Color(0xFF005551);
+  static const Color onSecondaryContainer = Color(0xFF8DF5F0);
 
-  static const Color tertiary = Color(0xFF4AE176);
-  static const Color onTertiary = Color(0xFF003915);
-  static const Color tertiaryContainer = Color(0xFF007733);
-  static const Color onTertiaryContainer = Color(0xFF84FF9C);
+  static const Color tertiary = Color(0xFFB4C5FF);
+  static const Color onTertiary = Color(0xFF002A78);
+  static const Color tertiaryContainer = Color(0xFF0053DB);
+  static const Color onTertiaryContainer = Color(0xFFCDD7FF);
 
-  static const Color onSurface = Color(0xFFDAE2FD);
-  static const Color onSurfaceVariant = Color(0xFFCCC3D8);
-  static const Color outline = Color(0xFF958DA1);
-  static const Color outlineVariant = Color(0xFF4A4455);
+  static const Color onSurface = Color(0xFFFFFFFF);
+  static const Color onSurfaceVariant = Color(0xFFA0A5B1);
+  static const Color outline = Color(0xFF5B6375);
+  static const Color outlineVariant = Color(0xFF39404E);
 
   // Custom glassmorphism colors
-  static Color glassBackground = const Color(0xFF0B1326).withOpacity(0.4);
-  static Color glassBorder = Colors.white.withOpacity(0.1);
+  static Color glassBackground = const Color(0xFF222731).withValues(alpha: 0.5);
+  static Color glassBorder = Colors.white.withValues(alpha: 0.08);
 }

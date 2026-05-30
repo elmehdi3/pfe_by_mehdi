@@ -1,6 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import 'app_card.dart';
 
 class PlayerCard extends StatelessWidget {
   final String nickname;
@@ -24,185 +24,145 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      padding: const EdgeInsets.all(16),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -20,
-            right: -20,
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.05),
-                shape: BoxShape.circle,
-              ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: 170, // Fixed width for grid/list aspect
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          decoration: BoxDecoration(
+            color: AppColors
+                .glassBackground, // e.g. white10 or solid dark with opacity
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: AppColors.glassBorder, // Subtle border
+              width: 1.5,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Avatar with online status
+              Stack(
+                alignment: Alignment.bottomRight,
                 children: [
-                  Row(
-                    children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundImage: NetworkImage(avatarUrl),
-                            backgroundColor: AppColors.surfaceContainer,
-                          ),
-                          Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                              color: isOnline
-                                  ? AppColors.tertiary
-                                  : AppColors.outlineVariant,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppColors.surface,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            nickname,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.bolt,
-                                color: AppColors.onSurfaceVariant,
-                                size: 12,
-                              ),
-                              Text(
-                                ping,
-                                style: const TextStyle(
-                                  color: AppColors.onSurfaceVariant,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        matchPercentage,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.tertiary, fontSize: 18),
-                      ),
-                      const Text(
-                        'MATCH',
-                        style: TextStyle(
-                          color: AppColors.onSurfaceVariant,
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.15),
+                          blurRadius: 20,
+                          spreadRadius: 2,
                         ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 36,
+                      backgroundImage: NetworkImage(avatarUrl),
+                      backgroundColor: AppColors.surfaceContainerHigh,
+                    ),
+                  ),
+                  if (isOnline)
+                    Container(
+                      width: 14,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.surfaceContainer,
+                          width: 2.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.8),
+                            blurRadius: 4,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Name
+              Text(
+                nickname,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+
+              // Level / Preferred info (Mocked as rank here)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.shield,
+                    color: AppColors.secondary,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    rank,
+                    style: TextStyle(
+                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
+
+              // Stats Row (Mocked Win / KD / Roe)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: AppColors.secondary.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Text(
-                      rank.toUpperCase(),
-                      style: const TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ...tags.map(
-                    (tag) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerHigh.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          color: AppColors.outlineVariant.withOpacity(0.2),
-                        ),
-                      ),
-                      child: Text(
-                        tag.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppColors.onSurfaceVariant,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _StatItem(label: 'Win', value: matchPercentage),
+                  const _StatItem(
+                    label: 'K/D',
+                    value: '1.55',
+                  ), // Static for demo visual
+                  _StatItem(label: 'Ping', value: ping),
                 ],
               ),
               const SizedBox(height: 20),
+
+              // Button "Requête"
               GestureDetector(
                 onTap: () {},
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppColors.primaryContainer,
-                        AppColors.secondaryContainer,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.primary, width: 1.5),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryContainer.withOpacity(0.3),
-                        blurRadius: 10,
+                        color: AppColors.primary.withValues(alpha: 0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                   child: const Center(
                     child: Text(
-                      'INVITE TO SQUAD',
+                      'Requête',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
+                        color: AppColors.primary,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),
@@ -210,8 +170,40 @@ class PlayerCard extends StatelessWidget {
               ),
             ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _StatItem({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

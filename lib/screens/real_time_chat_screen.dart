@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../widgets/chat_bubble.dart';
 import '../theme/app_colors.dart';
 import '../services/chat_service.dart';
-import 'package:provider/provider.dart';
-import '../providers/squad_provider.dart';
 import '../providers/user_provider.dart';
 
 class RealTimeChatScreen extends StatefulWidget {
@@ -17,27 +17,45 @@ class RealTimeChatScreen extends StatefulWidget {
 class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
   final _chatService = ChatService();
   final _messageController = TextEditingController();
+  late String _chatId;
+  bool _isLoading = true;
 
-  Future<void> _sendMessage(String squadId) async {
-    if (_messageController.text.trim().isEmpty) return;
+  @override
+  void initState() {
+    super.initState();
+    _initChat();
+  }
+
+  Future<void> _initChat() async {
+    // Determine the chat room id for this squad
+    final chatId = await _chatService.getOrCreateSquadChat(widget.squadId);
+    if (mounted) {
+      setState(() {
+        _chatId = chatId ?? 'invalid_chat';
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
     final user = Provider.of<UserProvider>(context, listen: false).user;
     if (user != null) {
-      final message = ChatMessage(
-        id: '',
-        senderId: user.id,
-        senderName: user.fullName,
-        text: _messageController.text.trim(),
-        timestamp: DateTime.now(),
-      );
-
-      await _chatService.sendMessage(squadId, message);
+      await _chatService.sendMessage(_chatId, user.id, text);
       _messageController.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.primary),
+      );
+    }
+
     return Row(
       children: [
         // Sidebar (Desktop only)
@@ -97,45 +115,48 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
 
               // Messages
               Expanded(
-                child: Consumer<SquadProvider>(
-                  builder: (context, squadProvider, child) {
-                    final squadId = widget.squadId;
-                    return StreamBuilder<List<ChatMessage>>(
-                      stream: _chatService.getMessages(squadId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(
-                            child: Text('No messages yet. Say hi!'),
-                          );
-                        }
+                child: StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: _chatService.chatMessagesStream(_chatId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('No messages yet. Say hi!'),
+                      );
+                    }
 
-                        final messages = snapshot.data!;
-                        final currentUserId = Provider.of<UserProvider>(
-                          context,
-                          listen: false,
-                        ).user?.id;
-                        return ListView.builder(
-                          reverse: true,
-                          padding: const EdgeInsets.all(24),
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            final msg = messages[index];
-                            final isMe = msg.senderId == currentUserId;
-                            return ChatBubble(
-                              text: msg.text,
-                              sender: isMe ? "Me" : msg.senderName,
-                              time:
-                                  "${msg.timestamp.hour}:${msg.timestamp.minute}",
-                              avatarUrl: "https://via.placeholder.com/150",
-                              isMe: isMe,
-                            );
-                          },
+                    final messages = snapshot.data!;
+                    final currentUserId = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    ).user?.id;
+
+                    return ListView.builder(
+                      reverse: true, // Scroll from bottom to top
+                      padding: const EdgeInsets.all(24),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final msg = messages[index];
+                        final isMe = msg['senderId'] == currentUserId;
+
+                        // Parse timestamp
+                        final timestamp = msg['timestamp'] as Timestamp?;
+                        final timeString = timestamp != null
+                            ? "${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
+                            : "Just now";
+
+                        return ChatBubble(
+                          text: msg['text'] ?? '',
+                          sender: isMe ? "Me" : "Teammate",
+                          time: timeString,
+                          avatarUrl: "https://via.placeholder.com/150",
+                          isMe: isMe,
                         );
                       },
                     );
@@ -161,7 +182,7 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
                     Expanded(
                       child: TextField(
                         controller: _messageController,
-                        onSubmitted: (_) => _sendMessage(widget.squadId),
+                        onSubmitted: (_) => _sendMessage(),
                         decoration: const InputDecoration(
                           hintText: 'Type a message...',
                           border: InputBorder.none,
@@ -174,7 +195,7 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.send, color: AppColors.primary),
-                      onPressed: () => _sendMessage(widget.squadId),
+                      onPressed: _sendMessage,
                     ),
                   ],
                 ),

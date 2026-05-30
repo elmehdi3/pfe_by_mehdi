@@ -1,12 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/player_card.dart';
 import '../theme/app_colors.dart';
+import '../services/matchmaking_service.dart';
+import '../providers/user_provider.dart';
+import '../models/user_model.dart';
 
-class MatchmakingSearchScreen extends StatelessWidget {
+class MatchmakingSearchScreen extends StatefulWidget {
   const MatchmakingSearchScreen({super.key});
 
   @override
+  State<MatchmakingSearchScreen> createState() =>
+      _MatchmakingSearchScreenState();
+}
+
+class _MatchmakingSearchScreenState extends State<MatchmakingSearchScreen> {
+  final MatchmakingService _matchmakingService = MatchmakingService();
+  bool _isLoading = true;
+  List<UserModel> _matches = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMatches();
+  }
+
+  Future<void> _fetchMatches() async {
+    setState(() => _isLoading = true);
+
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user != null) {
+      final matches = await _matchmakingService.findMatches(
+        myUid: user.id,
+        game: user.favoriteGame ?? 'Valorant',
+        rank: user.gameRank ?? 'Unranked',
+      );
+      setState(() {
+        _matches = matches;
+        _isLoading = false;
+      });
+    } else {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -41,17 +82,16 @@ class MatchmakingSearchScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _FilterChip(label: 'Rank', hasDropdown: true),
-                const SizedBox(width: 8),
-                _FilterChip(label: 'Ping', hasDropdown: true),
+                _FilterChip(label: user?.gameRank ?? 'Rank', isSelected: true),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: 'Language: EN',
+                  label: user?.favoriteGame ?? 'Game',
                   isSelected: true,
-                  hasClose: true,
                 ),
                 const SizedBox(width: 8),
-                _FilterChip(label: 'Reputation', hasDropdown: true),
+                const _FilterChip(label: 'Ping < 50ms', hasDropdown: true),
+                const SizedBox(width: 8),
+                const _FilterChip(label: 'Reputation', hasDropdown: true),
               ],
             ),
           ),
@@ -59,31 +99,69 @@ class MatchmakingSearchScreen extends StatelessWidget {
 
           // Player List
           Expanded(
-            child: ListView(
-              children: const [
-                PlayerCard(
-                  nickname: 'VortexKiller',
-                  avatarUrl:
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuAdygboGPS7o_vkalmRD-hy5tfoAl_Qlwj5zSly-oVsPy3wVDjjDGBfq179svxVktQX8hgSobNZlt7Y05pavjt8xhCFMgIU0Qrqo38VYxrKO-Vnmej0kbQ-dff7VloSRZIwi4eqNNnqRdkmy5-Vvpgc66LvZVVUmEqmSN1Kl-uT_5-ApOBeSBL7R4W3eIKFKfGZCR8nuUEP_vJL_e5h5sIfOUoEkHtPky6mUmQVUW6czsUrrZqwQmoOvL52N0kr8pIBC34rWad2YLI',
-                  ping: '24ms',
-                  matchPercentage: '98%',
-                  rank: 'Diamond I',
-                  tags: ['MVP x12'],
-                  isOnline: true,
-                ),
-                SizedBox(height: 16),
-                PlayerCard(
-                  nickname: 'SilentSnipe',
-                  avatarUrl:
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuCUWGN2B4DqrX1kw99hq47flup7dzMo04uEMJsQbXPxwQWH2x3wB3aOY1eCFZw7pwWMaof5T-WqEuLn_YcV45KdUoq0mkdELaorEgjeJEMLxUPNeZ7XbtGLc2D6hXJr82g5UFuahvmjCxDZHktP_1jx04yEITXrXdGidIqRW6No01Ey6QOTsBgeKCxqRmDXKqAGLA26Dx-Kn6NN0odw-HpbStwIROwSJxRPIJ_0OPtM_tBA2xq3jcRCu5jortLMIh2IL2YQFuDgQVg',
-                  ping: '42ms',
-                  matchPercentage: '85%',
-                  rank: 'Platinum III',
-                  tags: ['Tactician'],
-                  isOnline: false,
-                ),
-              ],
-            ),
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(color: AppColors.primary),
+                  )
+                : _matches.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.person_search_outlined,
+                          color: AppColors.onSurfaceVariant,
+                          size: 64,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'No matches found',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Try adjusting your search criteria\nor playing another game.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.onSurfaceVariant.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _fetchMatches,
+                    color: AppColors.primary,
+                    backgroundColor: AppColors.surfaceContainerHigh,
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.65,
+                          ),
+                      itemCount: _matches.length,
+                      itemBuilder: (context, index) {
+                        final player = _matches[index];
+                        return PlayerCard(
+                          nickname: player.fullName,
+                          avatarUrl:
+                              player.profileImage ??
+                              'https://via.placeholder.com/150',
+                          ping: '24ms', // Mock ping
+                          matchPercentage: '98%', // Mock match percentage
+                          rank: player.gameRank ?? 'Unranked',
+                          tags: player.servers ?? [],
+                          isOnline:
+                              true, // We could implement a presence system later
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -95,13 +173,11 @@ class _FilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final bool hasDropdown;
-  final bool hasClose;
 
   const _FilterChip({
     required this.label,
     this.isSelected = false,
     this.hasDropdown = false,
-    this.hasClose = false,
   });
 
   @override
@@ -145,16 +221,6 @@ class _FilterChip extends StatelessWidget {
             const SizedBox(width: 4),
             Icon(
               Icons.expand_more,
-              color: isSelected
-                  ? AppColors.primary
-                  : AppColors.onSurfaceVariant,
-              size: 14,
-            ),
-          ],
-          if (hasClose) ...[
-            const SizedBox(width: 4),
-            Icon(
-              Icons.close,
               color: isSelected
                   ? AppColors.primary
                   : AppColors.onSurfaceVariant,
