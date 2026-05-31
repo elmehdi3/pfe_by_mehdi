@@ -1,0 +1,6 @@
+apiVersion: v2
+name: matchmaker-backend
+description: Helm chart pour le backend Spring Boot de MatchMaker Gaming
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
