@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications - TEAMUP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#4a4455",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#7c3aed",
+                        "error": "#ffb4ab",
+                        "secondary": "#b4c5ff",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary": "#003915",
+                        "surface": "#0b1326",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-low": "#131b2e",
+                        "on-primary-container": "#ede0ff",
+                        "secondary-container": "#0053db",
+                        "on-tertiary-container": "#84ff9c",
+                        "inverse-primary": "#732ee4",
+                        "outline": "#958da1",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-primary": "#3f008e",
+                        "on-secondary-container": "#cdd7ff",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container": "#171f33",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "tertiary": "#4ae176",
+                        "background": "#0b1326",
+                        "on-primary-fixed": "#25005a",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-container": "#007733",
+                        "on-secondary": "#002a78",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-tint": "#d2bbff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#eaddff",
+                        "primary": "#d2bbff",
+                        "tertiary-fixed-dim": "#4ae176"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "margin-mobile": "16px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Sora"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Sora"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Sora"],
+                        "stats-number": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "stats-number": ["20px", { "lineHeight": "1", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: theme('colors.surface-container-highest');
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.outline-variant');
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-bloom-primary {
+            box-shadow: 0 0 15px 0 rgba(210, 187, 255, 0.3);
+        }
+        
+        .neon-bloom-primary-hover:hover {
+            box-shadow: 0 0 25px 0 rgba(210, 187, 255, 0.6);
+        }
+
+        .neon-bloom-tertiary {
+            box-shadow: 0 0 15px 0 rgba(107, 255, 143, 0.3);
+        }
+
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col pt-[64px] pb-[80px] md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-white/10 bg-surface/40 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+<div class="flex justify-between items-center h-16 px-margin-mobile w-full">
+<div class="flex items-center gap-sm">
+<!-- Leading Avatar (Simplified for context) -->
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a competitive eSports player with a serious expression. The lighting is dramatic, featuring stark neon purple and blue rim lights reflecting off their headset, set against a dark, minimalist digital background. This fits the high-stakes, adrenaline-fueled aesthetic of the TEAMUP platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm75fZNPftEa7YeSkYEBT5o_B8CtqLC9GiCYj7lMUOiGO7FV6uXud7mExgzYu23SJ46q_nGsMWEtl8med3hzecCGZZJ_AZz4slYbuVGBEDAXcm5CwQF9AfRR6HhXa2cBDbTbY0eaU_inBpNRZjfpmGTifKFatLBICnsEfzk3sk4iknPDPLG5sk91wGGUZSUSvYwu2VcgqOKsjFH8KPC08kJKCm-m-QEK1DkkXn9NjqCdowLOTnCUASK4aFtSLviz__ad5i-XaMlW0"/>
+</div>
+</div>
+<div class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter">
+                TEAMUP
+            </div>
+<button class="text-primary hover:text-primary transition-colors duration-300 scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="notifications" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-md md:py-lg flex flex-col gap-md">
+<!-- Page Header -->
+<div class="flex flex-col gap-xs mb-sm">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">System Feed</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Your latest alerts, invites, and match updates.</p>
+</div>
+<!-- Filter/Tabs -->
+<div class="flex gap-sm overflow-x-auto pb-xs scrollbar-hide">
+<button class="px-md py-sm rounded-DEFAULT bg-primary text-on-primary font-label-caps text-label-caps whitespace-nowrap neon-bloom-primary">ALL ACTIVITY</button>
+<button class="px-md py-sm rounded-DEFAULT glass-panel text-on-surface font-label-caps text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">INVITES</button>
+<button class="px-md py-sm rounded-DEFAULT glass-panel text-on-surface font-label-caps text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">MATCHES</button>
+<button class="px-md py-sm rounded-DEFAULT glass-panel text-on-surface font-label-caps text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">SYSTEM</button>
+</div>
+<!-- Notifications List (Bento-style layout for varied importance) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-sm">
+<!-- High Priority / Unread Item (Spans wider on desktop) -->
+<div class="md:col-span-8 glass-panel rounded-lg p-md relative overflow-hidden flex flex-col gap-sm border-primary/50 neon-bloom-primary transition-all duration-300">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="absolute top-md right-md">
+<span class="w-3 h-3 rounded-full bg-primary inline-block shadow-[0_0_8px_rgba(210,187,255,0.8)]"></span>
+</div>
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="sports_esports">sports_esports</span>
+</div>
+<div class="flex flex-col gap-xs flex-grow">
+<div class="flex justify-between items-center w-full">
+<span class="font-label-caps text-label-caps text-primary">MATCH INVITE</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">2M AGO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Ranked Squad Setup</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">User <strong class="text-on-surface">NeonNinja</strong> has invited you to join their lobby for a ranked session. They need one more support player.</p>
+<div class="flex gap-sm mt-sm">
+<button class="px-md py-sm rounded-DEFAULT bg-gradient-to-r from-primary to-secondary-container text-white font-label-caps text-label-caps neon-bloom-primary-hover transition-all duration-300">ACCEPT</button>
+<button class="px-md py-sm rounded-DEFAULT border border-secondary text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-colors">DECLINE</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Standard Priority Item -->
+<div class="md:col-span-4 glass-panel rounded-lg p-md relative flex flex-col gap-sm">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-outline-variant">
+<img alt="Team Logo" class="w-full h-full object-cover" data-alt="A stylized, neon-lit eSports team logo featuring abstract geometric shapes. The logo glows in vibrant green and blue hues against a deep black, textured background, fitting perfectly into a futuristic, competitive gaming interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmignm6kS4ctjWzZTzBTqiNEv6-8J4qvZWt7UiIx8fO5JPLfX5oHpfjGp4bt5M_k0CLYXSAMmzWlxT35zTpnY-4UYWUsziBRn1mlU56TxBMHmgM2oOB4-EJfB3nC6rhGPBaQIoAJw4IF8aSwIZdOpMglgsqV6TnOIefWn8hdi5YBbVgcYQ_J8uh-JRB4r5G9m4x1yZlvXrzeYLid8tzboeHvQ_Lco0eiYZfJRmdriM6GGxN3eUakzx5xgJqH6-ri8sQ4MC9thIetg"/>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-center w-full mb-xs">
+<span class="font-label-caps text-label-caps text-tertiary">SQUAD UPDATE</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">1H AGO</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Your squad <strong class="text-on-surface">Cyber Syndicate</strong> reached Tier 2 in the weekly ladder.</p>
+</div>
+</div>
+</div>
+<!-- System Alert -->
+<div class="md:col-span-6 glass-panel rounded-lg p-md relative flex flex-col gap-sm">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="system_update_alt">system_update_alt</span>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-center w-full mb-xs">
+<span class="font-label-caps text-label-caps text-secondary">SYSTEM MAINTENANCE</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">4H AGO</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Scheduled downtime for server upgrades on Friday 02:00 UTC. Expected duration: 2 hours.</p>
+</div>
+</div>
+</div>
+<!-- Another Unread Alert -->
+<div class="md:col-span-6 glass-panel rounded-lg p-md relative flex flex-col gap-sm border-tertiary/30 neon-bloom-tertiary">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div class="absolute top-md right-md">
+<span class="w-2 h-2 rounded-full bg-tertiary inline-block shadow-[0_0_8px_rgba(107,255,143,0.8)]"></span>
+</div>
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined text-tertiary" data-icon="emoji_events">emoji_events</span>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-center w-full mb-xs">
+<span class="font-label-caps text-label-caps text-tertiary">ACHIEVEMENT</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">12H AGO</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">You earned the <strong class="text-tertiary">Sharpshooter</strong> badge for maintaining &gt;60% accuracy in 5 consecutive matches.</p>
+</div>
+</div>
+</div>
+<!-- Read Message -->
+<div class="md:col-span-12 glass-panel rounded-lg p-md relative flex flex-col gap-sm opacity-70 hover:opacity-100 transition-opacity">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chat_bubble">chat_bubble</span>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-center w-full mb-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">DIRECT MESSAGE</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">YESTERDAY</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant"><strong class="text-on-surface">ViperStrike:</strong> "GGs man, let's run it back tomorrow same time?"</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-2xl dark:bg-surface/90 border-t border-white/10 bg-surface-container-highest/30 shadow-[0_-8px_32px_rgba(124,58,237,0.15)] flex justify-around items-center h-20 pb-safe px-xs">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Match (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="sports_esports">sports_esports</span>
+<span class="font-label-caps text-label-caps">Match</span>
+</a>
+<!-- Squad (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="groups">groups</span>
+<span class="font-label-caps text-label-caps">Squad</span>
+</a>
+<!-- Chat (Inactive - Notifications often fall under here or Profile depending on specific app arch, assuming Chat for messaging context) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<!-- Profile (Active - Settings/Notifications usually sit here if not top-level) -->
+<a class="flex flex-col items-center justify-center text-primary drop-shadow-[0_0_8px_rgba(210,187,255,0.8)] scale-110 transition-all" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>

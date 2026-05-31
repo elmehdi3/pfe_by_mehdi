@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TEAMUP - Match</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#4a4455",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#7c3aed",
+                        "error": "#ffb4ab",
+                        "secondary": "#b4c5ff",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary": "#003915",
+                        "surface": "#0b1326",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-low": "#131b2e",
+                        "on-primary-container": "#ede0ff",
+                        "secondary-container": "#0053db",
+                        "on-tertiary-container": "#84ff9c",
+                        "inverse-primary": "#732ee4",
+                        "outline": "#958da1",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-primary": "#3f008e",
+                        "on-secondary-container": "#cdd7ff",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container": "#171f33",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "tertiary": "#4ae176",
+                        "background": "#0b1326",
+                        "on-primary-fixed": "#25005a",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-container": "#007733",
+                        "on-secondary": "#002a78",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-tint": "#d2bbff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#eaddff",
+                        "primary": "#d2bbff",
+                        "tertiary-fixed-dim": "#4ae176"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "margin-mobile": "16px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Sora"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Sora"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Sora"],
+                        "stats-number": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "stats-number": ["20px", { "lineHeight": "1", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(210, 187, 255, 0.4), inset 0 0 10px rgba(210, 187, 255, 0.2);
+        }
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(45, 52, 73, 0.6) 0%, rgba(45, 52, 73, 0.3) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col pb-24 md:pb-0 pt-16">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] flex justify-between items-center h-16 px-margin-mobile">
+<div class="flex items-center gap-sm">
+<img alt="Avatar" class="w-8 h-8 rounded-full border border-primary/50" data-alt="A small, circular avatar portrait of a stylized sci-fi character. The lighting is moody with neon purple and electric blue rim lights. The background is dark, fitting a futuristic eSports theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP7-MOuC8KRvhmd41duCA52yVq5L9gCpihe0gaiKEVz4YlwX0bbiX4D-qUBpJYZpZsULtPi3VjRV1HCyDLQYfj37Ku-lqQvejzUKR1T6MA_72GpAqR1fu0bogZp0-hOg75KUuGijVGlv9CHqdkWk9lckS3zWby7akJY0pssR2tXNpd4Vu-XeqCvG4wbcgKBdeFWwxImN9c5Pn6URXJAKX_6-7IlNNioBa6pB7rqiZjQHpohQ2aWlIqi1IWf9Ry-f-Jg7BW3UrMUOg"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter uppercase">TEAMUP</h1>
+<div class="flex items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-md md:py-lg flex flex-col gap-md">
+<!-- Search & Filters -->
+<section class="flex flex-col gap-sm">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-sm top-1/2 transform -translate-y-1/2 text-outline-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-sm pl-10 pr-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search by ID or role..." type="text"/>
+</div>
+<div class="flex flex-wrap gap-xs">
+<button class="flex items-center gap-xs px-sm py-xs bg-surface-container border border-outline-variant/30 rounded-full text-on-surface-variant font-label-caps text-label-caps hover:border-primary hover:text-primary transition-all">
+<span>Rank</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex items-center gap-xs px-sm py-xs bg-surface-container border border-outline-variant/30 rounded-full text-on-surface-variant font-label-caps text-label-caps hover:border-primary hover:text-primary transition-all">
+<span>Ping</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex items-center gap-xs px-sm py-xs bg-primary/20 border border-primary rounded-full text-primary font-label-caps text-label-caps neon-glow">
+<span>Language: EN</span>
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button class="flex items-center gap-xs px-sm py-xs bg-surface-container border border-outline-variant/30 rounded-full text-on-surface-variant font-label-caps text-label-caps hover:border-primary hover:text-primary transition-all">
+<span>Reputation</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+</section>
+<!-- Player List -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Player Card 1 -->
+<article class="glass-panel rounded-xl p-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-bl-full -z-10 group-hover:bg-primary/20 transition-colors"></div>
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="relative">
+<img alt="Player Avatar" class="w-12 h-12 rounded-full border-2 border-tertiary" data-alt="A portrait of a gamer wearing a headset. The lighting is dark with neon green and purple accents. The background is a sleek, abstract tech pattern fitting an eSports theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdygboGPS7o_vkalmRD-hy5tfoAl_Qlwj5zSly-oVsPy3wVDjjDGBfq179svxVktQX8hgSobNZlt7Y05pavjt8xhCFMgIU0Qrqo38VYxrKO-Vnmej0kbQ-dff7VloSRZIwi4eqNNnqRdkmy5-Vvpgc66LvZVVUmEqmSN1Kl-uT_5-ApOBeSBL7R4W3eIKFKfGZCR8nuUEP_vJL_e5h5sIfOUoEkHtPky6mUmQVUW6czsUrrZqwQmoOvL52N0kr8pIBC34rWad2YLI"/>
+<div class="absolute -bottom-1 -right-1 bg-surface rounded-full p-[2px]">
+<div class="w-3 h-3 bg-tertiary rounded-full animate-pulse"></div>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface">VortexKiller</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span> 24ms
+                            </p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-number text-stats-number text-tertiary">98%</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Match</span>
+</div>
+</div>
+<div class="flex gap-xs mb-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-label-caps text-secondary font-bold border border-secondary/20">DIAMOND I</span>
+<span class="px-2 py-1 bg-tertiary/10 rounded text-[10px] font-label-caps text-tertiary font-bold border border-tertiary/20">MVP x12</span>
+</div>
+<button class="w-full py-2 bg-gradient-to-r from-primary-container to-secondary-container rounded-lg font-headline-md text-[14px] text-on-primary-container font-bold hover:opacity-90 transition-opacity neon-glow uppercase tracking-wider">
+                    Invite to Squad
+                </button>
+</article>
+<!-- Player Card 2 -->
+<article class="glass-panel rounded-xl p-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-bl-full -z-10 group-hover:bg-primary/20 transition-colors"></div>
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="relative">
+<img alt="Player Avatar" class="w-12 h-12 rounded-full border-2 border-outline-variant" data-alt="A close-up portrait of a female eSports player. Dark background with subtle neon blue edge lighting. Her expression is focused, fitting a highly competitive gaming environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUWGN2B4DqrX1kw99hq47flup7dzMo04uEMJsQbXPxwQWH2x3wB3aOY1eCFZw7pwWMaof5T-WqEuLn_YcV45KdUoq0mkdELaorEgjeJEMLxUPNeZ7XbtGLc2D6hXJr82g5UFuahvmjCxDZHktP_1jx04yEITXrXdGidIqRW6No01Ey6QOTsBgeKCxqRmDXKqAGLA26Dx-Kn6NN0odw-HpbStwIROwSJxRPIJ_0OPtM_tBA2xq3jcRCu5jortLMIh2IL2YQFuDgQVg"/>
+<div class="absolute -bottom-1 -right-1 bg-surface rounded-full p-[2px]">
+<div class="w-3 h-3 bg-outline-variant rounded-full"></div>
+</div>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface">SilentSnipe</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span> 42ms
+                            </p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-number text-stats-number text-primary">85%</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Match</span>
+</div>
+</div>
+<div class="flex gap-xs mb-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-label-caps text-secondary font-bold border border-secondary/20">PLATINUM III</span>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-label-caps text-on-surface-variant font-bold border border-outline-variant/20">TACTICIAN</span>
+</div>
+<button class="w-full py-2 bg-gradient-to-r from-primary-container to-secondary-container rounded-lg font-headline-md text-[14px] text-on-primary-container font-bold hover:opacity-90 transition-opacity neon-glow uppercase tracking-wider">
+                    Invite to Squad
+                </button>
+</article>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(124,58,237,0.15)] flex justify-around items-center h-20 pb-safe px-xs">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary drop-shadow-[0_0_8px_rgba(210,187,255,0.8)] scale-110 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="sports_esports" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-caps text-label-caps">Match</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="groups">groups</span>
+<span class="font-label-caps text-label-caps">Squad</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>

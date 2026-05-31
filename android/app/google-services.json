@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384306506797",
+    "project_id": "stitch-teamup-pfe-998877",
+    "storage_bucket": "stitch-teamup-pfe-998877.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384306506797:android:355e259101f1f59d1a9ca4",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtVY1HLgFnmRCucmt-DYoES1YCgehvYh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

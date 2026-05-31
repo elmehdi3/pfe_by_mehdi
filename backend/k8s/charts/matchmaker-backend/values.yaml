@@ -1,0 +1,30 @@
+replicaCount: 3
+
+image:
+  repository: matchmaker-gaming/backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+env:
+  springProfile: prod
+  dbUrl: "jdbc:mysql://mysql-service:3306/matchmaker_db"
+  redisHost: "redis-service"
+  rabbitmqHost: "rabbitmq-service"
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80

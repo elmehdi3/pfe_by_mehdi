@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile Creation - Gaming Info</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#2d3449",
+                    "outline-variant": "#4a4455",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "error-container": "#93000a",
+                    "surface-bright": "#31394d",
+                    "primary-container": "#7c3aed",
+                    "error": "#ffb4ab",
+                    "secondary": "#b4c5ff",
+                    "on-surface": "#dae2fd",
+                    "surface-variant": "#2d3449",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#00174b",
+                    "on-tertiary": "#003915",
+                    "surface": "#0b1326",
+                    "on-tertiary-fixed": "#002109",
+                    "surface-container-low": "#131b2e",
+                    "on-primary-container": "#ede0ff",
+                    "secondary-container": "#0053db",
+                    "on-tertiary-container": "#84ff9c",
+                    "inverse-primary": "#732ee4",
+                    "outline": "#958da1",
+                    "inverse-on-surface": "#283044",
+                    "on-background": "#dae2fd",
+                    "surface-container-high": "#222a3d",
+                    "on-surface-variant": "#ccc3d8",
+                    "on-primary": "#3f008e",
+                    "on-secondary-container": "#cdd7ff",
+                    "on-primary-fixed-variant": "#5a00c6",
+                    "surface-container-lowest": "#060e20",
+                    "surface-container": "#171f33",
+                    "inverse-surface": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#005321",
+                    "tertiary": "#4ae176",
+                    "background": "#0b1326",
+                    "on-primary-fixed": "#25005a",
+                    "tertiary-fixed": "#6bff8f",
+                    "tertiary-container": "#007733",
+                    "on-secondary": "#002a78",
+                    "secondary-fixed": "#dbe1ff",
+                    "primary-fixed-dim": "#d2bbff",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "surface-tint": "#d2bbff",
+                    "surface-dim": "#0b1326",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed": "#eaddff",
+                    "primary": "#d2bbff",
+                    "tertiary-fixed-dim": "#4ae176"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xl": "80px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "margin-mobile": "16px",
+                    "lg": "48px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Sora"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Sora"],
+                    "body-lg": ["Inter"],
+                    "display-lg-mobile": ["Sora"],
+                    "stats-number": ["Sora"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                    "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                    "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                    "stats-number": ["20px", { "lineHeight": "1", "fontWeight": "700" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(210, 187, 255, 0.3);
+        }
+        .neon-glow-active {
+            box-shadow: 0 0 25px rgba(210, 187, 255, 0.6);
+            border-color: rgba(210, 187, 255, 0.8);
+        }
+        
+        /* Custom range slider styling */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #d2bbff;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(210, 187, 255, 0.8);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #4a4455;
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- Top Navigation (Transactional/Onboarding - Suppressed mostly, just back button and simple brand) -->
+<header class="fixed top-0 w-full z-50 glass-panel h-16 flex items-center px-margin-mobile md:px-margin-desktop justify-between shadow-[0_4px_30px_rgba(0,0,0,0.1)] border-b border-white/10">
+<button class="flex items-center text-on-surface-variant hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter">
+            TEAMUP
+        </div>
+<div class="w-6"></div> <!-- Spacer for centering -->
+</header>
+<main class="flex-grow pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto w-full flex flex-col gap-lg">
+<!-- Header & Progress -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-end">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">Gaming Identity</h1>
+<span class="font-label-caps text-label-caps text-primary">STEP 2 OF 5</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Tell us what you play and how well you play it.</p>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-highest rounded-full h-2 mt-sm relative overflow-hidden">
+<div class="bg-gradient-to-r from-primary-container to-primary h-2 rounded-full shadow-[0_0_10px_rgba(210,187,255,0.5)]" style="width: 40%"></div>
+</div>
+</div>
+<!-- Main Form Area -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Left Column: Games -->
+<div class="flex flex-col gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Primary Games</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-xs">Select the main titles you play competitively.</p>
+<div class="grid grid-cols-2 gap-sm">
+<!-- Game Card 1 (Active) -->
+<button class="glass-panel rounded-xl p-sm flex flex-col items-center justify-center gap-sm aspect-square neon-glow-active bg-surface-container/60 hover:bg-surface-container-high transition-all group relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none"></div>
+<img alt="Game Logo" class="w-16 h-16 object-cover rounded-full border-2 border-primary" data-alt="A stylized, glowing neon logo reminiscent of a popular tactical shooter game, set against a dark, metallic background. The logo features sharp angles and vibrant red and purple accents, illuminated by an intense inner glow that creates a high-tech, aggressive aesthetic suitable for an elite gaming platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaQgS0DFNzS54VSkN3goWMJJfMt-1guj7bpPQSDlXC3h7_XddCtO-HYNiSm7kNrQEiO7gMR33Hhle5C6m9A8sFqyT5CFjyvHvjqKk99V8zIHkJ01OFJeVHS52-Dm5UC-4Z9Zq4LIu-Q900EgcYv8aSe243x8lsWEIRR1MoOYX7DEuG5UiO5aGFMQgS4KLQmSgKhdCj_Vtk_7TThMjLgnrPqoWjU2i3ZzEncJABFhV5gZC8W9HujuUvlPGcMwTCwSeNRVz0Y0bS36I"/>
+<span class="font-label-caps text-label-caps text-primary">VALORANT</span>
+<span class="absolute top-2 right-2 material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Game Card 2 (Inactive) -->
+<button class="glass-panel rounded-xl p-sm flex flex-col items-center justify-center gap-sm aspect-square hover:neon-glow hover:bg-surface-container-high transition-all group border border-outline-variant/30">
+<img alt="Game Logo" class="w-16 h-16 object-cover rounded-full border-2 border-outline-variant grayscale group-hover:grayscale-0 transition-all" data-alt="A cinematic, detailed close-up of a fantasy-style emblem representing a popular multiplayer online battle arena game. The emblem is rendered in deep gold and blue tones, resting on a shadowy, textured surface. The lighting is dramatic, casting soft highlights that hint at epic battles and strategic depth within a dark fantasy universe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1SQYC1oEK7Th_gG_X9wQ6sQbR3iKfrL3xcKnEvFeAdtQaTaIPqPfUh-0ENkJvCzZW5S-o6tE5ao_4usTLtK4ddog4wPjanCUUOW2ihFpU0uQ2M3ZGH8r5XVCzcrcEHyCsKoUzup8AmZOczyhUU8wJIx3SidPXPWOaHXGjjog5D2qEYCqpLK0dFe3SyLLZBBIy5dY-ytIZgfrKz5HcuqXitlp3oyC0--Q4naGn7XXshW_4XS0vEhj2jlh4y2G2RpV6IuCA3dCi12k"/>
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-on-surface">LEAGUE OF LEGENDS</span>
+</button>
+<!-- Game Card 3 (Inactive) -->
+<button class="glass-panel rounded-xl p-sm flex flex-col items-center justify-center gap-sm aspect-square hover:neon-glow hover:bg-surface-container-high transition-all group border border-outline-variant/30">
+<img alt="Game Logo" class="w-16 h-16 object-cover rounded-full border-2 border-outline-variant grayscale group-hover:grayscale-0 transition-all" data-alt="A gritty, realistic visual representing a classic tactical first-person shooter. The image features a distressed, metallic icon of a weapon crosshair or counter-terrorist insignia, glowing subtly with a cold blue light against a pitch-black, concrete-like texture. The style is utilitarian, tactical, and highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD677vnTKTvsMwSYjV_gA4oHns5tR69JW2Jy80g-N6ajntziKbMhNIRopG-c6m7jfxMzwUUotpAYiuqhfw2-2VUwM6L1mJ-rnwx4pSW_uppCk2i-5ucz1aNRBN37hFv5L5uNiYq8e4LiAxHZJRT-LjcOvgOEny5Tw8EnIipJQLBBQBbyqGes1D5EmO2c529R1fscuzhGY14q8QnUoZs0ECI4hs8i9O5IETjxZMc72EHYEQkQbjPbh8Hn3OkEl8jpbhMewFDiDkBWuo"/>
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-on-surface">CS:2</span>
+</button>
+<!-- Add Game -->
+<button class="glass-panel rounded-xl p-sm flex flex-col items-center justify-center gap-sm aspect-square border border-dashed border-outline-variant hover:border-primary/50 transition-all group">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-3xl" style="font-variation-settings: 'FILL' 0;">add</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-primary transition-colors">ADD GAME</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Details for Selected Game -->
+<div class="glass-panel rounded-xl p-md flex flex-col gap-md border border-primary/20 relative overflow-hidden">
+<!-- Subtle background glow for selected game context -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+<div class="flex items-center gap-sm border-b border-outline-variant/30 pb-sm">
+<span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-1 rounded-sm">EDITING</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Valorant Profile</h3>
+</div>
+<!-- Rank Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">CURRENT RANK / ELO</label>
+<div class="relative">
+<span class="absolute left-sm top-1/2 -translate-y-1/2 material-symbols-outlined text-outline-variant">military_tech</span>
+<input class="w-full bg-surface-container border border-outline-variant rounded-lg pl-10 pr-sm py-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all placeholder:text-outline-variant/60" placeholder="e.g. Diamond 2, Immortal..." type="text"/>
+</div>
+</div>
+<!-- Main Role Selection -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">MAIN ROLE</label>
+<div class="grid grid-cols-2 gap-sm">
+<label class="relative flex cursor-pointer">
+<input checked="" class="peer sr-only" name="role" type="radio"/>
+<div class="w-full glass-panel border border-outline-variant/50 rounded-lg p-sm text-center peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-all hover:bg-surface-container-high">
+<span class="font-body-md text-body-md font-semibold">Duelist</span>
+</div>
+</label>
+<label class="relative flex cursor-pointer">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="w-full glass-panel border border-outline-variant/50 rounded-lg p-sm text-center peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-all hover:bg-surface-container-high">
+<span class="font-body-md text-body-md font-semibold">Initiator</span>
+</div>
+</label>
+<label class="relative flex cursor-pointer">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="w-full glass-panel border border-outline-variant/50 rounded-lg p-sm text-center peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-all hover:bg-surface-container-high">
+<span class="font-body-md text-body-md font-semibold">Controller</span>
+</div>
+</label>
+<label class="relative flex cursor-pointer">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="w-full glass-panel border border-outline-variant/50 rounded-lg p-sm text-center peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-all hover:bg-surface-container-high">
+<span class="font-body-md text-body-md font-semibold">Sentinel</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Competitive Level Slider -->
+<div class="flex flex-col gap-sm mt-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-caps text-label-caps text-on-surface-variant">COMPETITIVE INTENT</label>
+<span class="font-label-caps text-label-caps text-primary">HARDCORE</span>
+</div>
+<input class="w-full appearance-none bg-transparent" max="3" min="1" type="range" value="3"/>
+<div class="flex justify-between px-1 text-xs text-outline-variant font-label-caps">
+<span>CASUAL</span>
+<span>RANKED</span>
+<span class="text-primary">HARDCORE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-end gap-md mt-lg border-t border-white/10 pt-md">
+<button class="px-xl py-sm rounded border border-secondary text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-all flex items-center justify-center gap-xs">
+                SKIP FOR NOW
+            </button>
+<button class="px-xl py-sm rounded bg-gradient-to-r from-primary-container to-inverse-primary text-white font-label-caps text-label-caps hover:shadow-[0_0_20px_rgba(210,187,255,0.4)] transition-all flex items-center justify-center gap-xs">
+                CONTINUE
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</main>
+</body></html>

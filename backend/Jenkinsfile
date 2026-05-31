@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "matchmaker-gaming/backend"
+        K8S_NAMESPACE = "matchmaker-prod"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                dir('backend') {
+                    sh './gradlew clean build'
+                }
+            }
+            post {
+                always {
+                    junit 'backend/build/test-results/test/*.xml'
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        def appImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", "backend/")
+                        appImage.push()
+                        appImage.push("latest")
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to K8s') {
+            steps {
+                sh "helm upgrade --install matchmaker-backend ./k8s/charts/matchmaker-backend --namespace ${K8S_NAMESPACE} --set image.tag=${env.BUILD_ID}"
+            }
+        }
+    }
+
+    post {
+        failure {
+            mail to: 'dev-ops@matchmakergaming.com',
+                 subject: "Pipeline Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+                 body: "Vérifiez les logs Jenkins pour plus de détails."
+        }
+    }
+}

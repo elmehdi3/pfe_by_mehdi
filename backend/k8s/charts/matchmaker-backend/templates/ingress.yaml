@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "matchmaker-backend.fullname" . }}
+  labels:
+    {{- include "matchmaker-backend.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    # Configuration WebSocket
+    nginx.ingress.kubernetes.io/websocket-services: {{ include "matchmaker-backend.fullname" . }}
+spec:
+  rules:
+    - host: api.matchmakergaming.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matchmaker-backend.fullname" . }}
+                port:
+                  number: 80

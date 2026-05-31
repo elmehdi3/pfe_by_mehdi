@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile Creation - TeamUp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Sora:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#4a4455",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#7c3aed",
+                        "error": "#ffb4ab",
+                        "secondary": "#b4c5ff",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary": "#003915",
+                        "surface": "#0b1326",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-low": "#131b2e",
+                        "on-primary-container": "#ede0ff",
+                        "secondary-container": "#0053db",
+                        "on-tertiary-container": "#84ff9c",
+                        "inverse-primary": "#732ee4",
+                        "outline": "#958da1",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-primary": "#3f008e",
+                        "on-secondary-container": "#cdd7ff",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container": "#171f33",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "tertiary": "#4ae176",
+                        "background": "#0b1326",
+                        "on-primary-fixed": "#25005a",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-container": "#007733",
+                        "on-secondary": "#002a78",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-tint": "#d2bbff",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#eaddff",
+                        "primary": "#d2bbff",
+                        "tertiary-fixed-dim": "#4ae176"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "base": "8px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "margin-mobile": "16px",
+                        "lg": "48px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Sora"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Sora"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Sora"],
+                        "stats-number": ["Sora"]
+                    },
+                    fontSize: {
+                        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }],
+                        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.04em", fontWeight: "800" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "display-lg-mobile": ["32px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "stats-number": ["20px", { lineHeight: "1", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom glow effects for neon bloom */
+        .neon-glow-primary {
+            box-shadow: 0 0 15px rgba(210, 187, 255, 0.4), 0 0 30px rgba(210, 187, 255, 0.2);
+        }
+        .neon-glow-primary-hover:hover {
+            box-shadow: 0 0 25px rgba(210, 187, 255, 0.6), 0 0 45px rgba(210, 187, 255, 0.3);
+        }
+        .neon-glow-focus:focus-within {
+            box-shadow: 0 0 10px rgba(210, 187, 255, 0.3);
+            border-color: #d2bbff;
+        }
+        
+        /* Glassmorphism Inner Stroke */
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(45, 52, 73, 0.4) 0%, rgba(19, 27, 46, 0.6) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        }
+
+        /* Custom Scrollbar for selects (webkit) */
+        select::-webkit-scrollbar {
+            width: 8px;
+        }
+        select::-webkit-scrollbar-track {
+            background: #171f33;
+        }
+        select::-webkit-scrollbar-thumb {
+            background: #4a4455;
+            border-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center p-margin-mobile relative overflow-x-hidden">
+<!-- Background Atmospheric Glows -->
+<div class="fixed top-0 left-1/4 w-96 h-96 bg-inverse-primary opacity-20 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-secondary-container opacity-10 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- Main Container - Transactional Canvas (Nav Suppressed) -->
+<main class="w-full max-w-[480px] z-10">
+<!-- Glassmorphism Card -->
+<div class="glass-panel backdrop-blur-[30px] rounded-xl p-md sm:p-lg relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+<!-- Progress Indicator -->
+<div class="mb-lg">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Step 1</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">20%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-1/5 bg-primary neon-glow-primary rounded-full transition-all duration-500"></div>
+</div>
+</div>
+<!-- Header -->
+<div class="text-center mb-lg">
+<h1 class="font-headline-md text-headline-md font-bold mb-xs text-on-surface">General Info</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Establish your identity in the arena.</p>
+</div>
+<form class="flex flex-col gap-md">
+<!-- Avatar Upload -->
+<div class="flex flex-col items-center justify-center mb-sm">
+<div class="relative group cursor-pointer">
+<!-- Circular Avatar Container with Neon Border -->
+<div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-surface-container border-2 border-primary/50 flex items-center justify-center overflow-hidden neon-glow-primary neon-glow-primary-hover transition-all duration-300 relative z-10">
+<!-- Placeholder Icon -->
+<span class="material-symbols-outlined text-[40px] text-primary opacity-80 group-hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 0;">
+                                add_a_photo
+                            </span>
+<!-- Hover Overlay -->
+<div class="absolute inset-0 bg-surface/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="font-label-caps text-label-caps text-primary">UPLOAD</span>
+</div>
+</div>
+<!-- Pulse Ring -->
+<div class="absolute inset-0 rounded-full border border-primary opacity-30 animate-ping z-0"></div>
+</div>
+</div>
+<!-- Input Field: Gamertag -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-xs" for="gamertag">Gamertag</label>
+<div class="relative flex items-center bg-surface-container border border-outline-variant rounded-DEFAULT transition-all duration-200 neon-glow-focus">
+<span class="material-symbols-outlined text-outline-variant ml-sm absolute pointer-events-none">
+                            sports_esports
+                        </span>
+<input class="w-full bg-transparent border-none py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-0" id="gamertag" placeholder="Enter your gaming alias" type="text"/>
+</div>
+</div>
+<!-- Dropdown: Country/Region -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-xs" for="country">Region</label>
+<div class="relative flex items-center bg-surface-container border border-outline-variant rounded-DEFAULT transition-all duration-200 neon-glow-focus">
+<span class="material-symbols-outlined text-outline-variant ml-sm absolute pointer-events-none">
+                            public
+                        </span>
+<select class="w-full bg-transparent border-none py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:ring-0 appearance-none cursor-pointer" id="country">
+<option class="bg-surface-container text-outline-variant" disabled="" selected="" value="">Select Region</option>
+<option class="bg-surface-container text-on-surface" value="na">North America</option>
+<option class="bg-surface-container text-on-surface" value="eu">Europe</option>
+<option class="bg-surface-container text-on-surface" value="asia">Asia</option>
+<option class="bg-surface-container text-on-surface" value="latam">Latin America</option>
+<option class="bg-surface-container text-on-surface" value="oce">Oceania</option>
+</select>
+<span class="material-symbols-outlined text-outline-variant absolute right-sm pointer-events-none">
+                            expand_more
+                        </span>
+</div>
+</div>
+<!-- Dropdown: Language -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-xs" for="language">Primary Language</label>
+<div class="relative flex items-center bg-surface-container border border-outline-variant rounded-DEFAULT transition-all duration-200 neon-glow-focus">
+<span class="material-symbols-outlined text-outline-variant ml-sm absolute pointer-events-none">
+                            translate
+                        </span>
+<select class="w-full bg-transparent border-none py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:ring-0 appearance-none cursor-pointer" id="language">
+<option class="bg-surface-container text-outline-variant" disabled="" selected="" value="">Select Language</option>
+<option class="bg-surface-container text-on-surface" value="en">English</option>
+<option class="bg-surface-container text-on-surface" value="es">Español</option>
+<option class="bg-surface-container text-on-surface" value="fr">Français</option>
+<option class="bg-surface-container text-on-surface" value="kr">한국어</option>
+<option class="bg-surface-container text-on-surface" value="jp">日本語</option>
+</select>
+<span class="material-symbols-outlined text-outline-variant absolute right-sm pointer-events-none">
+                            expand_more
+                        </span>
+</div>
+</div>
+<!-- Actions -->
+<div class="mt-lg pt-md border-t border-white/5 flex justify-end">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-xl py-sm rounded-DEFAULT flex items-center gap-xs neon-glow-primary neon-glow-primary-hover transition-all duration-300" type="button">
+                        NEXT
+                        <span class="material-symbols-outlined text-[18px]">
+                            arrow_forward
+                        </span>
+</button>
+</div>
+</form>
+</div>
+</main>
+</body></html>
