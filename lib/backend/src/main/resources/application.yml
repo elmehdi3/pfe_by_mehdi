@@ -41,3 +41,10 @@ matchmaker:
     secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
     expirationMs: 86400000 # 24 hours
     refreshExpirationMs: 604800000 # 7 days
+
+aws:
+  accessKey: ${AWS_ACCESS_KEY:dummy-access-key}
+  secretKey: ${AWS_SECRET_KEY:dummy-secret-key}
+  region: ${AWS_REGION:eu-west-1}
+  s3:
+    endpoint: ${AWS_S3_ENDPOINT:}
