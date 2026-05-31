@@ -1,44 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
+import 'api_service.dart';
 
-class MatchmakingService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  /// Find players matching specific criteria
+class MatchmakingService extends BaseApiService {
+  /// Find players matching specific criteria using smart matching
   Future<List<UserModel>> findMatches({
-    required String myUid,
-    required String game,
-    required String rank,
-    String? requiredHardware,
+    required int myUid,
+    required int gameId,
   }) async {
     try {
-      // Base query: same game
-      Query query = _db
-          .collection('users')
-          .where('favoriteGame', isEqualTo: game);
+      final response = await dio.get(
+        '/matching/smart/$gameId',
+        queryParameters: {'userId': myUid},
+      );
 
-      // We handle the 'rank' matching.
-      // Firestore allows one equality/inequality on a single field,
-      // but to mimic a 'smart' range, we can just filter by exact rank for now,
-      // or fetch and filter in Dart if ranges are needed.
-      query = query.where('gameRank', isEqualTo: rank);
-
-      // If hardware matters (e.g. PC only)
-      if (requiredHardware != null && requiredHardware.isNotEmpty) {
-        query = query.where('hardware', arrayContains: requiredHardware);
+      if (response.statusCode == 200) {
+        final List<dynamic> matches = response.data['data'];
+        return matches
+            .map((m) => UserModel.fromMap(m['matchedUserId'].toString(), m))
+            .toList();
       }
-
-      final snapshot = await query.limit(50).get();
-
-      final List<UserModel> matches = [];
-
-      for (var doc in snapshot.docs) {
-        if (doc.id == myUid) continue; // Skip self
-        final data = doc.data() as Map<String, dynamic>;
-        matches.add(UserModel.fromMap(doc.id, data));
-      }
-
-      return matches;
+      return [];
     } catch (e) {
       print('Error finding matches: $e');
       return [];
@@ -46,18 +27,41 @@ class MatchmakingService {
   }
 
   /// Suggest squads based on the user's favorite game
-  Future<List<Map<String, dynamic>>> suggestSquads(String favoriteGame) async {
+  Future<List<Map<String, dynamic>>> suggestSquads(int gameId) async {
     try {
-      final snapshot = await _db
-          .collection('squads')
-          .where('game', isEqualTo: favoriteGame)
-          .limit(20)
-          .get();
+      final response = await dio.get(
+        '/teams/search',
+        queryParameters: {'gameId': gameId},
+      );
 
-      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
+      if (response.statusCode == 200) {
+        final List<dynamic> squads = response.data['data']['content'];
+        return squads.cast<Map<String, dynamic>>();
+      }
+      return [];
     } catch (e) {
       print('Error suggesting squads: $e');
       return [];
+    }
+  }
+
+  /// Quick match logic
+  Future<int?> quickMatch(int userId, int? gameId) async {
+    try {
+      final response = await dio.get(
+        '/matching/random/quick',
+        queryParameters: {
+          'userId': userId,
+          if (gameId != null) 'gameId': gameId,
+        },
+      );
+
+      if (response.statusCode == 200 && response.data['data'] != null) {
+        return response.data['data']['matchedUserId'];
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 }

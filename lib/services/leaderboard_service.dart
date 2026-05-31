@@ -1,40 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
+import 'api_service.dart';
 
-/// Fetches ranked player data from Firestore for the leaderboard.
-class LeaderboardService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  /// Returns top [limit] players sorted by [sortField] descending.
+/// Fetches ranked player data from the backend for the leaderboard.
+class LeaderboardService extends BaseApiService {
+  /// Returns top players sorted by [sortField] descending.
   Future<List<UserModel>> getTopPlayers({
     String sortField = 'reputationScore',
     int limit = 50,
   }) async {
-    final snapshot = await _db
-        .collection('users')
-        .orderBy(sortField, descending: true)
-        .limit(limit)
-        .get();
+    try {
+      final response = await dio.get(
+        '/profiles/search',
+        queryParameters: {'size': limit, 'sort': '$sortField,desc'},
+      );
 
-    return snapshot.docs
-        .map((doc) => UserModel.fromMap(doc.id, doc.data()))
-        .toList();
+      if (response.statusCode == 200) {
+        final List<dynamic> profiles = response.data['data']['content'];
+        return profiles
+            .map((p) => UserModel.fromMap(p['id'].toString(), p))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching leaderboard: $e');
+      return [];
+    }
   }
 
-  /// Real-time stream of top players.
+  /// Optional: Real-time stream (simulated via polling or WebSocket)
   Stream<List<UserModel>> topPlayersStream({
     String sortField = 'reputationScore',
     int limit = 50,
-  }) {
-    return _db
-        .collection('users')
-        .orderBy(sortField, descending: true)
-        .limit(limit)
-        .snapshots()
-        .map(
-          (s) => s.docs
-              .map((doc) => UserModel.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+  }) async* {
+    final players = await getTopPlayers(sortField: sortField, limit: limit);
+    yield players;
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../widgets/app_button.dart';
 import '../theme/app_colors.dart';
 import 'onboarding_flow.dart';
 import 'sign_up_screen.dart';
+import 'forgot_password_screen.dart';
 
 import '../services/auth_service.dart';
 
@@ -47,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 48),
                   Text(
-                    'STITCH',
+                    'PRODEX',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w900,
@@ -86,7 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen(),
+                          ),
+                        );
+                      },
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(color: AppColors.primary),
@@ -146,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: _buildSocialButton(
                           Icons.discord,
                           'Discord',
-                          onTap: () {}, // Not implemented
+                          onTap: _handleDiscordSignIn,
                         ),
                       ),
                     ],
@@ -193,21 +202,31 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
 
     setState(() => _isLoading = true);
-    final result = await _authService.login(
-      _emailController.text,
-      _passwordController.text,
-    );
-    setState(() => _isLoading = false);
+    try {
+      final result = await _authService.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+      setState(() => _isLoading = false);
 
-    if (result != null) {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const OnboardingFlow()),
-        );
+      if (result != null) {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingFlow()),
+          );
+        }
+      } else {
+        _showError('Login Failed. Invalid credentials.');
       }
-    } else {
-      _showError('Login Failed. Check your credentials.');
+    } on DioException catch (e) {
+      setState(() => _isLoading = false);
+      final message =
+          e.response?.data['message'] ?? 'Network Error: ${e.message}';
+      _showError(message);
+    } catch (e) {
+      setState(() => _isLoading = false);
+      _showError('An unexpected error occurred: $e');
     }
   }
 
@@ -225,6 +244,25 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       _showError('Google Sign-In was cancelled or failed.');
+    }
+  }
+
+  Future<void> _handleDiscordSignIn() async {
+    setState(() => _isLoading = true);
+    final result = await _authService.signInWithDiscord();
+    setState(() => _isLoading = false);
+
+    if (result != null) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OnboardingFlow()),
+        );
+      }
+    } else {
+      _showError(
+        'Discord Sign-In failed. Ensure it is configured in Firebase.',
+      );
     }
   }
 

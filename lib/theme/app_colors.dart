@@ -30,6 +30,6 @@ class AppColors {
   static const Color outlineVariant = Color(0xFF39404E);
 
   // Custom glassmorphism colors
-  static Color glassBackground = const Color(0xFF222731).withValues(alpha: 0.5);
-  static Color glassBorder = Colors.white.withValues(alpha: 0.08);
+  static Color glassBackground = const Color(0xFF222731).withOpacity(0.5);
+  static Color glassBorder = Colors.white.withOpacity(0.08);
 }

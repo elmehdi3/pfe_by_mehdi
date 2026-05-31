@@ -9,6 +9,7 @@ import 'leaderboard_screen.dart';
 import 'invitations_management_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/friend_provider.dart';
+import '../providers/user_provider.dart';
 
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
@@ -24,7 +25,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     const HomeDashboardScreen(),
     const MatchmakingSearchScreen(),
     const SquadManagementScreen(),
-    const RealTimeChatScreen(squadId: 'default'),
+    const RealTimeChatScreen(squadId: 0),
     const LeaderboardScreen(),
     const PlayerProfileScreen(),
   ];
@@ -37,14 +38,20 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         elevation: 0,
         title: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                'https://lh3.googleusercontent.com/aida-public/AB6AXuBYJXqi_CgO3rzBIb4SlKzIwtGK7FZWc3qSumJ4OcA_lHOyFgzWnq3jBcPAgV4bMybmmipmOV-4LAb6monAWOTQaRwDgXjO9p3tb2AAU6VAJ1AG7SjawVtHbbhg9dGHK0dbKp-tU0nTTW7PqyOlroEd_8OtFKG1C8cW0BanjBY6kHljdyIfWmm5lZyD3FPtcKtfgv-6M_nJbomRiJFweM6yvUNp6TcdaD8B8ckqiTRQZRANrnCbdmFgKhXp2fIY5-PVnsKY-S23_Y8',
-                width: 32,
-                height: 32,
-                fit: BoxFit.cover,
-              ),
+            Consumer<UserProvider>(
+              builder: (context, userProvider, child) {
+                final user = userProvider.user;
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                    user?.profileImage ??
+                        'https://lh3.googleusercontent.com/aida-public/AB6AXuBYJXqi_CgO3rzBIb4SlKzIwtGK7FZWc3qSumJ4OcA_lHOyFgzWnq3jBcPAgV4bMybmmipmOV-4LAb6monAWOTQaRwDgXjO9p3tb2AAU6VAJ1AG7SjawVtHbbhg9dGHK0dbKp-tU0nTTW7PqyOlroEd_8OtFKG1C8cW0BanjBY6kHljdyIfWmm5lZyD3FPtcKtfgv-6M_nJbomRiJFweM6yvUNp6TcdaD8B8ckqiTRQZRANrnCbdmFgKhXp2fIY5-PVnsKY-S23_Y8',
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
             ),
             const SizedBox(width: 12),
             const Text(

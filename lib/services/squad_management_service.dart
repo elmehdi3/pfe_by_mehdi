@@ -1,59 +1,67 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'api_service.dart';
 
-class SquadManagementService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-
+class SquadManagementService extends BaseApiService {
   // Create a new squad
   Future<String?> createSquad({
     required String name,
-    required String game,
-    required String creatorUid,
+    required int gameId,
+    required int creatorUid,
     String? logoUrl,
   }) async {
     try {
-      final docRef = await _db.collection('squads').add({
-        'name': name,
-        'game': game,
-        'logoUrl': logoUrl,
-        'adminId': creatorUid,
-        'createdAt': FieldValue.serverTimestamp(),
-        'members': [creatorUid],
-      });
-      return docRef.id;
+      final response = await dio.post(
+        '/teams',
+        data: {
+          'name': name,
+          'gameId': gameId,
+          'ownerId': creatorUid,
+          'description': 'Squad members ensemble',
+        },
+      );
+      return response.data['data']['id'].toString();
     } catch (e) {
       print('Error creating squad: $e');
       return null;
     }
   }
 
-  // Stream of a user's squads
-  Stream<List<Map<String, dynamic>>> userSquadsStream(String uid) {
-    return _db
-        .collection('squads')
-        .where('members', arrayContains: uid)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            return {'id': doc.id, ...doc.data()};
-          }).toList();
-        });
+  // Get user's squads
+  Future<List<Map<String, dynamic>>> getUserSquads(int userId) async {
+    try {
+      final response = await dio.get('/teams/user/$userId');
+      if (response.statusCode == 200) {
+        final List<dynamic> squads = response.data['data'];
+        return squads.cast<Map<String, dynamic>>();
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching user squads: $e');
+      return [];
+    }
   }
 
-  // Stream of a specific squad's details
-  Stream<Map<String, dynamic>?> squadStream(String squadId) {
-    return _db.collection('squads').doc(squadId).snapshots().map((doc) {
-      if (!doc.exists) return null;
-      return {'id': doc.id, ...doc.data() as Map<String, dynamic>};
-    });
+  // Get a specific squad's details
+  Future<Map<String, dynamic>?> getSquadDetails(int squadId) async {
+    try {
+      final response = await dio.get('/teams/$squadId');
+      if (response.statusCode == 200) {
+        return response.data['data'] as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching squad details: $e');
+      return null;
+    }
   }
 
   // Add a member to a squad
-  Future<bool> addMember(String squadId, String newMemberUid) async {
+  Future<bool> addMember(int squadId, int newMemberUid) async {
     try {
-      await _db.collection('squads').doc(squadId).update({
-        'members': FieldValue.arrayUnion([newMemberUid]),
-      });
-      return true;
+      final response = await dio.post(
+        '/teams/$squadId/members',
+        queryParameters: {'userId': newMemberUid},
+      );
+      return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print('Error adding member: $e');
       return false;
@@ -61,91 +69,31 @@ class SquadManagementService {
   }
 
   // Remove a member from a squad
-  Future<bool> removeMember(String squadId, String memberUid) async {
+  Future<bool> removeMember(int squadId, int memberUid) async {
     try {
-      await _db.collection('squads').doc(squadId).update({
-        'members': FieldValue.arrayRemove([memberUid]),
-      });
-      return true;
+      final response = await dio.delete('/teams/$squadId/members/$memberUid');
+      return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       print('Error removing member: $e');
       return false;
     }
   }
 
-  // Send a squad invitation
-  Future<bool> sendSquadInvite(
-    String squadId,
-    String fromUid,
-    String toUid,
-  ) async {
+  // Send a squad invitation (Uses Invitations API)
+  Future<bool> sendSquadInvite(int squadId, int fromUid, int toUid) async {
     try {
-      await _db
-          .collection('users')
-          .doc(toUid)
-          .collection('squad_invites')
-          .doc(squadId)
-          .set({
-            'squadId': squadId,
-            'from': fromUid,
-            'timestamp': FieldValue.serverTimestamp(),
-          });
-      return true;
+      final response = await dio.post(
+        '/invitations/send',
+        queryParameters: {
+          'senderId': fromUid,
+          'receiverId': toUid,
+          'type': 'TEAM_INVITE',
+          'targetId': squadId,
+        },
+      );
+      return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print('Error sending squad invite: $e');
-      return false;
-    }
-  }
-
-  // Stream of incoming squad invites
-  Stream<List<Map<String, dynamic>>> incomingSquadInvitesStream(String uid) {
-    return _db
-        .collection('users')
-        .doc(uid)
-        .collection('squad_invites')
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map((doc) {
-            return {'id': doc.id, ...doc.data()};
-          }).toList(),
-        );
-  }
-
-  // Accept squad invite
-  Future<bool> acceptInvite(String uid, String squadId) async {
-    try {
-      // Add member to squad
-      final success = await addMember(squadId, uid);
-      if (success) {
-        // Remove invite
-        await _db
-            .collection('users')
-            .doc(uid)
-            .collection('squad_invites')
-            .doc(squadId)
-            .delete();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print('Error accepting invite: $e');
-      return false;
-    }
-  }
-
-  // Decline squad invite
-  Future<bool> declineInvite(String uid, String squadId) async {
-    try {
-      await _db
-          .collection('users')
-          .doc(uid)
-          .collection('squad_invites')
-          .doc(squadId)
-          .delete();
-      return true;
-    } catch (e) {
-      print('Error declining invite: $e');
       return false;
     }
   }

@@ -1,99 +1,97 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'api_service.dart';
+import 'token_service.dart';
+import 'package:dio/dio.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  // Stream of auth changes
-  Stream<User?> get user => _auth.authStateChanges();
+  final BaseApiService _api = BaseApiService();
 
   // Sign Up
-  Future<UserCredential?> signUp(
-    String email,
-    String password,
-    String fullName,
-  ) async {
+  Future<bool> signUp(String email, String password, String fullName) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      final response = await _api.dio.post(
+        '/auth/signup',
+        data: {
+          'email': email,
+          'password': password,
+          'pseudo': fullName, // Backend uses 'pseudo' for username
+        },
       );
 
-      // Create user document in Firestore
-      await _firestore.collection('users').doc(result.user!.uid).set({
-        'fullName': fullName,
-        'email': email,
-        'createdAt': FieldValue.serverTimestamp(),
-        'onboardingCompleted': false,
-      });
-
-      return result;
+      // Backend returns ApiResponse<MessageResponse>
+      if (response.data['success'] == true) {
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      print('Sign up API Error: ${e.response?.data['message'] ?? e.message}');
+      rethrow;
     } catch (e) {
-      print('Sign up error: $e');
-      return null;
+      print('General sign up error: $e');
+      return false;
     }
   }
 
   // Login
-  Future<UserCredential?> login(String email, String password) async {
+  Future<Map<String, dynamic>?> login(String email, String password) async {
     try {
-      return await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      final response = await _api.dio.post(
+        '/auth/signin',
+        data: {
+          'pseudo': email, // Backend login uses 'pseudo' as identifier
+          'password': password,
+        },
       );
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        final token = data['token'];
+        final refreshToken = data['refreshToken'];
+
+        await TokenService.saveTokens(token, refreshToken);
+        return data; // returns user info (id, pseudo, email, etc.)
+      }
+      return null;
+    } on DioException catch (e) {
+      print('Login API Error: ${e.response?.data['message'] ?? e.message}');
+      rethrow;
     } catch (e) {
-      print('Login error: $e');
+      print('General login error: $e');
       return null;
     }
   }
 
   // Logout
   Future<void> logout() async {
-    await _auth.signOut();
+    await TokenService.clearTokens();
   }
 
-  // Sign in with Google
-  Future<UserCredential?> signInWithGoogle() async {
+  // Sign in with Google (Skeleton for future integration)
+  Future<Map<String, dynamic>?> signInWithGoogle() async {
+    print('Google Sign-In needs backend integration endpoints');
+    return null;
+  }
+
+  // Sign in with Discord (Skeleton for future integration)
+  Future<Map<String, dynamic>?> signInWithDiscord() async {
+    print('Discord Sign-In needs backend integration endpoints');
+    return null;
+  }
+
+  // Password Reset
+  Future<bool> resetPassword(String email) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      final response = await _api.dio.post(
+        '/auth/forgot-password',
+        data: {'email': email},
       );
-
-      UserCredential result = await _auth.signInWithCredential(credential);
-
-      // Check if user exists in Firestore, if not create
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(result.user!.uid)
-          .get();
-      if (!userDoc.exists) {
-        await _firestore.collection('users').doc(result.user!.uid).set({
-          'fullName': result.user!.displayName ?? 'New Player',
-          'email': result.user!.email,
-          'createdAt': FieldValue.serverTimestamp(),
-          'onboardingCompleted': false,
-          'profileImage': result.user!.photoURL,
-        });
-      }
-
-      return result;
+      return response.data['success'] == true;
     } catch (e) {
-      print('Google sign in error: $e');
-      return null;
+      print('Password reset error: $e');
+      return false;
     }
   }
 
-  // Get current user id
-  String? get currentUserId => _auth.currentUser?.uid;
-
-  // Get current Firebase user
-  User? get currentUser => _auth.currentUser;
+  // Dummy getters for compatibility with existing UI
+  String? get currentUserId => null;
+  dynamic get currentUser => null;
 }

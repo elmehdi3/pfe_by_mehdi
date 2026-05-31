@@ -1,41 +1,59 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'screens/splash_screen.dart';
 import 'services/notification_service.dart';
-
-import 'package:provider/provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/squad_provider.dart';
 import 'providers/friend_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Push Notifications
-  await NotificationService().initialize();
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserProvider()),
+          ChangeNotifierProvider(create: (_) => SquadProvider()..fetchSquads()),
+          ChangeNotifierProvider(create: (_) => FriendProvider()),
+        ],
+        child: const ProdexApp(),
+      ),
+    );
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => SquadProvider()..fetchSquads()),
-        ChangeNotifierProvider(create: (_) => FriendProvider()),
-      ],
-      child: const StitchApp(),
-    ),
-  );
+    // Initialize Push Notifications in the background after app starts
+    NotificationService().initialize().catchError((e) {
+      print('Notification Service failed to initialize: $e');
+    });
+  } catch (e, stacktrace) {
+    print('Failed to initialize: $e');
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: SingleChildScrollView(
+              child: Text(
+                'Failed to start app:\n$e\n\n$stacktrace',
+                style: const TextStyle(color: Colors.red),
+                textDirection: TextDirection.ltr,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class StitchApp extends StatelessWidget {
-  const StitchApp({super.key});
+class ProdexApp extends StatelessWidget {
+  const ProdexApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Pfe by mehdi',
+      title: 'PRODEX',
       theme: AppTheme.darkTheme,
       home: const SplashScreen(),
     );

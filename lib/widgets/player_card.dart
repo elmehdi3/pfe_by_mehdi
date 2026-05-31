@@ -52,7 +52,7 @@ class PlayerCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.15),
+                          color: AppColors.primary.withOpacity(0.15),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -77,7 +77,7 @@ class PlayerCard extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.8),
+                            color: AppColors.primary.withOpacity(0.8),
                             blurRadius: 4,
                           ),
                         ],
@@ -114,7 +114,7 @@ class PlayerCard extends StatelessWidget {
                   Text(
                     rank,
                     style: TextStyle(
-                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.8),
+                      color: AppColors.onSurfaceVariant.withOpacity(0.8),
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -144,12 +144,12 @@ class PlayerCard extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: AppColors.primary, width: 1.5),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.15),
+                        color: AppColors.primary.withOpacity(0.15),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -189,7 +189,7 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+            color: AppColors.onSurfaceVariant.withOpacity(0.7),
             fontSize: 10,
             fontWeight: FontWeight.w500,
           ),

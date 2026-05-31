@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+import '../services/token_service.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
@@ -14,22 +15,19 @@ class UserProvider with ChangeNotifier {
   final _dbService = DatabaseService();
 
   UserProvider() {
-    _listenToAuthChanges();
+    _tryAutoLogin();
   }
 
-  void _listenToAuthChanges() {
-    _authService.user.listen((firebaseUser) async {
-      if (firebaseUser != null) {
-
-        await fetchUserProfile(firebaseUser.uid);
-      } else {
-        _user = null;
-        notifyListeners();
-      }
-    });
+  Future<void> _tryAutoLogin() async {
+    final token = await TokenService.getToken();
+    if (token != null) {
+      // In a real app, we might decode the JWT to get the userId
+      // For now, this is a placeholder.
+      // If we had the userId stored, we could call fetchUserProfile.
+    }
   }
 
-  Future<void> fetchUserProfile(String uid) async {
+  Future<void> fetchUserProfile(int uid) async {
     _isLoading = true;
     notifyListeners();
 
@@ -42,6 +40,17 @@ class UserProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void setUser(UserModel user) {
+    _user = user;
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    await _authService.logout();
+    _user = null;
+    notifyListeners();
   }
 
   Future<void> updateProfile(Map<String, dynamic> data) async {

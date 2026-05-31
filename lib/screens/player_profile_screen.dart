@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_card.dart';
 import '../theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
+import 'settings_screen.dart';
 
 class PlayerProfileScreen extends StatelessWidget {
   const PlayerProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
+
+    if (user == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -40,10 +50,11 @@ class PlayerProfileScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: const ClipOval(
+                            child: ClipOval(
                               child: Image(
                                 image: NetworkImage(
-                                  'https://lh3.googleusercontent.com/aida-public/AB6AXuD7pZdHTt4F2gVqI4JckaBON1SJ-b-kkNzo3xmpeJJxbzHDoaDXAFM3vruuktbhS5X9k1br3DRHwZqss2gMHj4YeV_HqFITkFAqc3g644EkmaZcGCBFqmj7MyURwtAfZvofp9kcdnmtMXXcQvuYLzQ5HTHCwdppMV7x1UkjR4Ic30ZVWmafEoB-3ALgDsdSd5tjid6Sn9cEnysDguG9ez4BnzFXGaFQoXR2b_jQp1x2Uso4sq0rhhKX1wtiXcjOsffeEmUHjVBIAXc',
+                                  user.profileImage ??
+                                      'https://via.placeholder.com/150',
                                 ),
                                 fit: BoxFit.cover,
                               ),
@@ -78,31 +89,34 @@ class PlayerProfileScreen extends StatelessWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Xenon',
+                                    text: user.fullName.split(' ').first,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.displaySmall,
                                   ),
-                                  TextSpan(
-                                    text: 'Strike',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall
-                                        ?.copyWith(color: AppColors.primary),
-                                  ),
+                                  if (user.fullName.contains(' '))
+                                    TextSpan(
+                                      text: user.fullName.substring(
+                                        user.fullName.indexOf(' '),
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall
+                                          ?.copyWith(color: AppColors.primary),
+                                    ),
                                 ],
                               ),
                             ),
-                            const Row(
+                            Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.location_on,
                                   color: AppColors.outlineVariant,
                                   size: 14,
                                 ),
                                 Text(
-                                  ' Server: NA East',
-                                  style: TextStyle(
+                                  ' Server: ${(user.servers != null && user.servers!.isNotEmpty) ? user.servers!.first : 'Generic'}',
+                                  style: const TextStyle(
                                     color: AppColors.onSurfaceVariant,
                                     fontSize: 12,
                                   ),
@@ -127,7 +141,7 @@ class PlayerProfileScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 24),
-                            if (!isMobile) _buildActionButtons(),
+                            if (!isMobile) _buildActionButtons(context),
                           ],
                         ),
                       ),
@@ -135,7 +149,7 @@ class PlayerProfileScreen extends StatelessWidget {
                   ),
                   if (isMobile) ...[
                     const SizedBox(height: 24),
-                    _buildActionButtons(),
+                    _buildActionButtons(context),
                   ],
                 ],
               );
@@ -228,14 +242,9 @@ class PlayerProfileScreen extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-                                const _GameRow(
-                                  name: 'Valorant',
-                                  rank: 'Radiant',
-                                ),
-                                const SizedBox(height: 12),
-                                const _GameRow(
-                                  name: 'League of Legends',
-                                  rank: 'Grandmaster',
+                                _GameRow(
+                                  name: 'Default Game',
+                                  rank: user.gameRank ?? 'No Rank',
                                 ),
                               ],
                             ),
@@ -264,11 +273,9 @@ class PlayerProfileScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 16),
-                          const _GameRow(name: 'Valorant', rank: 'Radiant'),
-                          const SizedBox(height: 12),
-                          const _GameRow(
-                            name: 'League of Legends',
-                            rank: 'Grandmaster',
+                          _GameRow(
+                            name: 'Default Game',
+                            rank: user.gameRank ?? 'No Rank',
                           ),
                         ],
                       ),
@@ -346,14 +353,19 @@ class PlayerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.group_add, size: 18),
-            label: const Text('INVITE'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+            icon: const Icon(Icons.settings, size: 18),
+            label: const Text('SETTINGS'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryContainer,
               foregroundColor: Colors.white,
@@ -365,8 +377,8 @@ class PlayerProfileScreen extends StatelessWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () {},
-            icon: const Icon(Icons.chat, size: 18),
-            label: const Text('MESSAGE'),
+            icon: const Icon(Icons.share, size: 18),
+            label: const Text('SHARE'),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.secondary,
               side: const BorderSide(color: AppColors.secondary),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../widgets/app_button.dart';
 import '../theme/app_colors.dart';
 import 'onboarding_flow.dart';
@@ -211,22 +212,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     setState(() => _isLoading = true);
-    final result = await _authService.signUp(
-      _emailController.text,
-      _passwordController.text,
-      _nameController.text,
-    );
-    setState(() => _isLoading = false);
+    try {
+      final success = await _authService.signUp(
+        _emailController.text,
+        _passwordController.text,
+        _nameController.text,
+      );
+      setState(() => _isLoading = false);
 
-    if (result != null) {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const OnboardingFlow()),
-        );
+      if (success) {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingFlow()),
+          );
+        }
+      } else {
+        _showError('Registration Failed. Please try again.');
       }
-    } else {
-      _showError('Registration Failed.');
+    } on DioException catch (e) {
+      setState(() => _isLoading = false);
+      final message =
+          e.response?.data['message'] ?? 'Network Error: ${e.message}';
+      _showError(message);
+    } catch (e) {
+      setState(() => _isLoading = false);
+      _showError('An unexpected error occurred: $e');
     }
   }
 

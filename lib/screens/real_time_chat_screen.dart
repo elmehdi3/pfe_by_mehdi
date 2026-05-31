@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import '../widgets/chat_bubble.dart';
 import '../theme/app_colors.dart';
@@ -7,7 +6,7 @@ import '../services/chat_service.dart';
 import '../providers/user_provider.dart';
 
 class RealTimeChatScreen extends StatefulWidget {
-  final String squadId;
+  final int squadId;
   const RealTimeChatScreen({super.key, required this.squadId});
 
   @override
@@ -17,7 +16,7 @@ class RealTimeChatScreen extends StatefulWidget {
 class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
   final _chatService = ChatService();
   final _messageController = TextEditingController();
-  late String _chatId;
+  int _chatId = 0;
   bool _isLoading = true;
 
   @override
@@ -26,12 +25,17 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
     _initChat();
   }
 
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
   Future<void> _initChat() async {
-    // Determine the chat room id for this squad
     final chatId = await _chatService.getOrCreateSquadChat(widget.squadId);
     if (mounted) {
       setState(() {
-        _chatId = chatId ?? 'invalid_chat';
+        _chatId = chatId ?? 0;
         _isLoading = false;
       });
     }
@@ -116,7 +120,9 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
               // Messages
               Expanded(
                 child: StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: _chatService.chatMessagesStream(_chatId),
+                  stream: _chatId == 0
+                      ? const Stream.empty()
+                      : _chatService.chatMessagesStream(_chatId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -124,6 +130,9 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
                           color: AppColors.primary,
                         ),
                       );
+                    }
+                    if (_chatId == 0) {
+                      return const Center(child: Text('Could not load chat.'));
                     }
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
@@ -138,24 +147,29 @@ class _RealTimeChatScreenState extends State<RealTimeChatScreen> {
                     ).user?.id;
 
                     return ListView.builder(
-                      reverse: true, // Scroll from bottom to top
+                      reverse: true,
                       padding: const EdgeInsets.all(24),
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final msg = messages[index];
                         final isMe = msg['senderId'] == currentUserId;
 
-                        // Parse timestamp
-                        final timestamp = msg['timestamp'] as Timestamp?;
-                        final timeString = timestamp != null
-                            ? "${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
-                            : "Just now";
+                        // Parse ISO timestamp from backend
+                        final rawTimestamp = msg['timestamp'] as String?;
+                        String timeString = 'Just now';
+                        if (rawTimestamp != null) {
+                          try {
+                            final dt = DateTime.parse(rawTimestamp).toLocal();
+                            timeString =
+                                '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+                          } catch (_) {}
+                        }
 
                         return ChatBubble(
-                          text: msg['text'] ?? '',
-                          sender: isMe ? "Me" : "Teammate",
+                          text: msg['content'] ?? msg['text'] ?? '',
+                          sender: isMe ? 'Me' : 'Teammate',
                           time: timeString,
-                          avatarUrl: "https://via.placeholder.com/150",
+                          avatarUrl: 'https://via.placeholder.com/150',
                           isMe: isMe,
                         );
                       },

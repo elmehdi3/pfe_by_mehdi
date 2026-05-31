@@ -30,10 +30,10 @@ class _MatchmakingSearchScreenState extends State<MatchmakingSearchScreen> {
 
     final user = Provider.of<UserProvider>(context, listen: false).user;
     if (user != null) {
+      // Mock gameId for now, in a real app this would come from the game object
       final matches = await _matchmakingService.findMatches(
         myUid: user.id,
-        game: user.favoriteGame ?? 'Valorant',
-        rank: user.gameRank ?? 'Unranked',
+        gameId: 1, // Default game ID for testing
       );
       setState(() {
         _matches = matches;

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/friend_provider.dart';
@@ -6,6 +5,7 @@ import '../providers/user_provider.dart';
 import '../widgets/app_card.dart';
 import '../theme/app_colors.dart';
 import 'user_search_screen.dart';
+import '../services/database_service.dart';
 
 class InvitationsManagementScreen extends StatefulWidget {
   const InvitationsManagementScreen({super.key});
@@ -28,7 +28,7 @@ class _InvitationsManagementScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final uid = Provider.of<UserProvider>(context, listen: false).user?.id;
       if (uid != null) {
-        Provider.of<FriendProvider>(context, listen: false).startListening(uid);
+        Provider.of<FriendProvider>(context, listen: false).loadData(uid);
       }
     });
   }
@@ -137,8 +137,9 @@ class _FriendRequestsTab extends StatelessWidget {
             final req = requests[i];
             return _RequestCard(
               request: req,
-              onAccept: () => fp.acceptRequest(req['id']),
-              onDecline: () => fp.declineRequest(req['id']),
+              onAccept: () => fp.acceptRequest(int.parse(req['id'].toString())),
+              onDecline: () =>
+                  fp.declineRequest(int.parse(req['id'].toString())),
             );
           },
         );
@@ -157,7 +158,7 @@ class _FriendsTab extends StatelessWidget {
     return Consumer<FriendProvider>(
       builder: (context, fp, _) {
         final myUid =
-            Provider.of<UserProvider>(context, listen: false).user?.id ?? '';
+            Provider.of<UserProvider>(context, listen: false).user?.id ?? 0;
         final friends = fp.friends;
 
         if (friends.isEmpty) {
@@ -199,7 +200,7 @@ class _FriendsTab extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, i) {
             final f = friends[i];
-            final fId = f['id'] as String;
+            final int fId = int.parse(f['id'].toString());
             return _FriendTile(
               friendId: fId,
               onRemove: () => fp.removeFriend(myUid, fId),
@@ -216,18 +217,22 @@ class _FriendsTab extends StatelessWidget {
 // ─────────────────────────────────────────────
 
 class _FriendTile extends StatelessWidget {
-  final String friendId;
+  final int friendId;
   final VoidCallback onRemove;
 
   const _FriendTile({required this.friendId, required this.onRemove});
 
   Future<Map<String, dynamic>?> _fetchProfile() async {
     try {
-      final snap = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(friendId)
-          .get();
-      return snap.data();
+      final user = await DatabaseService().getUserProfile(friendId);
+      if (user != null) {
+        return {
+          'fullName': user.fullName,
+          'gameRank': user.gameRank,
+          'profileImage': user.profileImage,
+        };
+      }
+      return null;
     } catch (_) {
       return null;
     }
@@ -334,7 +339,7 @@ class _RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fromUid = request['from'] as String? ?? '?';
+    final fromUid = request['from']?.toString() ?? '?';
 
     return AppCard(
       padding: const EdgeInsets.all(16),

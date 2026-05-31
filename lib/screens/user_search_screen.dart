@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/friend_provider.dart';
 import '../providers/user_provider.dart';
 import '../theme/app_colors.dart';
 import '../widgets/app_card.dart';
+import '../services/database_service.dart';
 
 /// Screen for searching players by Gamertag and sending friend requests.
 class UserSearchScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
   final _searchController = TextEditingController();
   List<Map<String, dynamic>> _results = [];
   bool _isSearching = false;
-  final Set<String> _pendingUids = {};
+  final Set<int> _pendingUids = {};
 
   @override
   void dispose() {
@@ -42,7 +42,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
     }
   }
 
-  Future<void> _sendRequest(String toUid) async {
+  Future<void> _sendRequest(int toUid) async {
     final myUid = Provider.of<UserProvider>(context, listen: false).user?.id;
     if (myUid == null) return;
     setState(() => _pendingUids.add(toUid));
@@ -136,7 +136,9 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final player = _results[index];
-                      final uid = player['id'] as String;
+                      final uid = player['id'] is String
+                          ? int.parse(player['id'])
+                          : player['id'] as int;
                       final myUid = Provider.of<UserProvider>(
                         context,
                         listen: false,
@@ -331,7 +333,7 @@ class FriendsListScreen extends StatelessWidget {
     return Consumer<FriendProvider>(
       builder: (context, friendProvider, _) {
         final myUid =
-            Provider.of<UserProvider>(context, listen: false).user?.id ?? '';
+            Provider.of<UserProvider>(context, listen: false).user?.id ?? 0;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -374,7 +376,9 @@ class FriendsListScreen extends StatelessWidget {
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, i) {
                     final friend = friendProvider.friends[i];
-                    final friendId = friend['id'] as String;
+                    final friendId = friend['id'] is String
+                        ? int.parse(friend['id'])
+                        : friend['id'] as int;
                     return _FriendTile(
                       friendId: friendId,
                       onRemove: () =>
@@ -387,11 +391,7 @@ class FriendsListScreen extends StatelessWidget {
     );
   }
 
-  void _showRequestsSheet(
-    BuildContext context,
-    FriendProvider fp,
-    String myUid,
-  ) {
+  void _showRequestsSheet(BuildContext context, FriendProvider fp, int myUid) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
@@ -490,18 +490,22 @@ class FriendsListScreen extends StatelessWidget {
 // ─────────────────────────────────────────────────────────
 
 class _FriendTile extends StatelessWidget {
-  final String friendId;
+  final int friendId;
   final VoidCallback onRemove;
 
   const _FriendTile({required this.friendId, required this.onRemove});
 
   Future<Map<String, dynamic>?> _fetchProfile() async {
     try {
-      final snap = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(friendId)
-          .get();
-      return snap.data();
+      final user = await DatabaseService().getUserProfile(friendId);
+      if (user != null) {
+        return {
+          'fullName': user.fullName,
+          'gameRank': user.gameRank,
+          'profileImage': user.profileImage,
+        };
+      }
+      return null;
     } catch (_) {
       return null;
     }
@@ -609,7 +613,7 @@ class _RequestTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fromUid = request['from'] as String? ?? '?';
+    final fromUid = request['from']?.toString() ?? '?';
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(

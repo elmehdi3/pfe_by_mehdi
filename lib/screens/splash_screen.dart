@@ -118,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen>
                         const SizedBox(height: 32),
                         // App Name
                         Text(
-                          'STITCH',
+                          'PRODEX',
                           style: Theme.of(context).textTheme.displayMedium
                               ?.copyWith(
                                 color: AppColors.onSurface,

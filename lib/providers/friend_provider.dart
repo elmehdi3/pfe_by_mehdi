@@ -16,28 +16,19 @@ class FriendProvider extends ChangeNotifier {
   String? get error => _error;
   int get pendingCount => _incomingRequests.length;
 
-  StreamSubscription? _friendsSub;
-  StreamSubscription? _requestsSub;
-
-  /// Start listening to friend & request streams for [uid].
-  void startListening(String uid) {
-    _friendsSub?.cancel();
-    _requestsSub?.cancel();
-
-    _friendsSub = _friendService.friendsStream(uid).listen((data) {
-      _friends = data;
-      notifyListeners();
-    });
-
-    _requestsSub = _friendService.incomingRequestsStream(uid).listen((data) {
-      _incomingRequests = data;
-      notifyListeners();
-    });
-  }
-
-  void stopListening() {
-    _friendsSub?.cancel();
-    _requestsSub?.cancel();
+  /// Fetch initial data (Replaces startListening)
+  Future<void> loadData(int uid) async {
+    _setLoading(true);
+    try {
+      final friendsData = await _friendService.getFriends(uid);
+      final requestsData = await _friendService.getIncomingRequests(uid);
+      _friends = friendsData;
+      _incomingRequests = requestsData;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _setLoading(false);
+    }
   }
 
   Future<List<Map<String, dynamic>>> searchUsers(String query) async {
@@ -45,7 +36,7 @@ class FriendProvider extends ChangeNotifier {
     return await _friendService.searchUsers(query.trim());
   }
 
-  Future<void> sendRequest(String fromUid, String toUid) async {
+  Future<void> sendRequest(int fromUid, int toUid) async {
     _setLoading(true);
     try {
       await _friendService.sendFriendRequest(fromUid, toUid);
@@ -56,10 +47,11 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> acceptRequest(String requestId) async {
+  Future<void> acceptRequest(int requestId) async {
     _setLoading(true);
     try {
       await _friendService.acceptFriendRequest(requestId);
+      // Wait a bit or reload
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -67,22 +59,16 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> declineRequest(String requestId) async {
+  Future<void> declineRequest(int requestId) async {
     await _friendService.declineFriendRequest(requestId);
   }
 
-  Future<void> removeFriend(String uid, String friendId) async {
+  Future<void> removeFriend(int uid, int friendId) async {
     await _friendService.removeFriend(uid, friendId);
   }
 
   void _setLoading(bool val) {
     _isLoading = val;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    stopListening();
-    super.dispose();
   }
 }
